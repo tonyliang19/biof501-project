@@ -27,3 +27,4 @@ clean:
 	@echo "Removing intermediate files like logs and work/ ..."
 	@rm -rf work/
 	@rm -f .nextflow.log*
+	@rm -rf .nextflow/

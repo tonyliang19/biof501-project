@@ -15,7 +15,9 @@ LOG_FILE=${timestamp}-DGE_pipeline.log
 # Input options for the pipeline
 SAMPLESHEET=data/samplesheet.csv
 OUTDIR=results # Output directory for publishing files
-
+# These profiles should not contain spaces, and order matters
+# docker,test might not be equivalent to test,docker
+PROFILE="docker"
 # Add a parser from cli arg i.e.
 # bash run_nxf.sh -r allows for resuming workflow
 # bahs run_nxf.sh -b allows for redireting output of the log to DGE_pipeline.log
@@ -38,7 +40,7 @@ do
 done
 
 # Then parse the run cmd
-NEXTFLOW_CMD="nextflow run ${NXF_SRC_MAIN} --outdir ${OUTDIR} --samplesheet ${SAMPLESHEET}"
+NEXTFLOW_CMD="nextflow run ${NXF_SRC_MAIN} --outdir ${OUTDIR} --samplesheet ${SAMPLESHEET} -profile ${PROFILE}"
 
 if [ "$RESUME" == "TRUE" ]; then
   NEXTFLOW_CMD+=" -resume"

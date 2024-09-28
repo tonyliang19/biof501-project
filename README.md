@@ -17,8 +17,8 @@ Author: Tony Liang
 
 1. Read data from fastq format
 2. Quality check and filtering
-  -  Apply initial QC
-  - Trim reads
+    -  Apply initial QC
+    - Trim reads
 3. Read alignment or quantifcation, with or without reference genome
 4. Gene expression quantification to generate count matrix
 5. Normalization of count data

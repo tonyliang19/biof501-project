@@ -28,3 +28,4 @@ clean:
 	@rm -rf work/
 	@rm -f .nextflow.log*
 	@rm -rf .nextflow/
+	@rm -rf results/

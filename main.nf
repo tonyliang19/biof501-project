@@ -8,7 +8,6 @@ include { FASTQC }                  from "./modules/local/fastqc"
 include { softwareVersionsToYAML }  from "./modules/nf-core/main.nf"
 
 
-
 workflow {
     println "Hello World"
     /*
@@ -23,19 +22,23 @@ workflow {
 
     // Initialize version file to store
     ch_versions = Channel.empty()
-    
+
+    // This channel reads the samplesheet, and construct path of the records 
     Channel
         .fromPath( params.samplesheet )
         .splitCsv( header: true )
+        // This gives [ sample_name, [ reads ] ]
+        .map { row -> 
+            [ row.sample_name, [ file(row.fastq1), file(row.fastq2) ] ]
+        }
         .set { record }
 
-
-    record.view()
-    // Process to download the GSE<accession_code> study
+    // record.view()
+    // Execute initial quality control on fastq data
     FASTQC ( record )    
 
     // Collect versions from fastqc
-    ch_versions.mix ( FASTQC.out.versions )
+    ch_versions = ch_versions.mix ( FASTQC.out.versions )
 
     // Lastly collect all software versions and to YAML
     softwareVersionsToYAML(ch_versions)

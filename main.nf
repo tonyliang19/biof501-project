@@ -5,6 +5,8 @@
 
 // Including modules
 include { FASTQC }                  from "./modules/local/fastqc"
+include { TRIMGALORE }              from "./modules/local/trimgalore"
+include { TRINITY }                 from "./modules/local/trinity"
 include { softwareVersionsToYAML }  from "./modules/nf-core/main.nf"
 
 
@@ -35,10 +37,17 @@ workflow {
 
     // record.view()
     // Execute initial quality control on fastq data
-    FASTQC ( record )    
+    FASTQC ( record )
 
-    // Collect versions from fastqc
-    ch_versions = ch_versions.mix ( FASTQC.out.versions )
+    // Then run trimming adapters from qced fastq
+    // TODO: This step might be failing now?
+    TRIMGALORE ( record )
+
+    TRINITY ( TRIMGALORE.out.reads )
+    // Collect versions from modules
+    ch_versions
+        .mix ( FASTQC.out.versions )
+        .mix ( TRIMGALORE.out.versions )
 
     // Lastly collect all software versions and to YAML
     softwareVersionsToYAML(ch_versions)

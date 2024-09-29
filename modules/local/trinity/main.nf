@@ -1,7 +1,7 @@
-process FASTQC {
+process TRINITY {
     debug false
     // Use docker container for now
-    container 'biocontainers/fastqc:0.12.1--hdfd78af_0'
+    container 'biocontainers/trinity:2.11.0--h5ef6573_1'
     tag "${sample_name}"
     publishDir (
 		path: "${params.outdir}/${task.process.tokenize(':').join('/').toLowerCase()}/${sample_name}",
@@ -16,18 +16,23 @@ process FASTQC {
     // This is take in as a map, able to retrieve element from map_name.key_name
     tuple val(sample_name), path(reads)
     output:
-    tuple val(sample_name), path("*.html"), emit: html
-    tuple val(sample_name), path("*.zip") , emit: zip
+    //tuple val(sample_name), path("*.html"), emit: html
+    //tuple val(sample_name), path("*.zip") , emit: zip
+    path("trinity_out_dir/Trinity.fasta"), emit: fasta, optional: true
     path("versions.yml"),                   emit: versions
 
     script:
     // Compute first, then collect the version of binary ran
     """
-    fastqc -f fastq -q ${reads}
+    Trinity --seqType fq \
+        --left ${reads[0]} \
+        --right ${reads[1]} \
+        --max_memory 2G \
+        --CPU 2
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        fastqc: \$( fastqc --version | sed '/FastQC v/!d; s/.*v//' )
+        Trinity: \$( Trinity --version )
     END_VERSIONS
     """
 }

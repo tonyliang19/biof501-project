@@ -1,0 +1,2 @@
+sample_name,fastq1,fastq2
+DRR000140,data/DRR000140_1.fastq.gz,data/DRR000140_2.fastq.gz

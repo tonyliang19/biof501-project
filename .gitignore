@@ -1,0 +1,4 @@
+# Ignore nextflow files
+work/
+.nextflow
+.nextflow.log*

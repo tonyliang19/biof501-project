@@ -7,7 +7,7 @@ Author: Tony Liang
 ## Project Outline
 
 
-**Question**: Identify genes that are differential expressed between different conditions like disease vs control
+**Question**: Identify genes from 10 genes of interest that are differential expressed between different conditions like disease vs control
 
 **Data input**: Fastq file of RNA-seq data, single or paired allowed
 
@@ -15,13 +15,12 @@ Author: Tony Liang
 
 ### Workflow stages/steps
 
-1. Read data from fastq format
-2. Quality check and filtering
-    -  Apply initial QC
-    - Trim reads
-3. Read alignment or quantifcation, with or without reference genome
-4. Gene expression quantification to generate count matrix
-5. Normalization of count data
-6. Perform differential expression analysis
-7. Visualization and summary report
+Take  data from fastq format that has disease and control and perform the following:
+1. Quality check and filtering
+    -  Apply initial QC using **fastqc**
+    - Trim reads **cutadapt** or ***trimmmomatic**
+3. Read alignment reference genome (containing 10 genes of interest only) **STAR** or **hisat2**
+   - Gene expression quantification to generate count matrix
+6. Perform differential expression analysis in R using **DESeq2**
+7. Visualization and summary report in R using **pheatmap**
 

@@ -1,7 +1,8 @@
-process DOWNLOAD_GENOME {
+process DOWNLOAD_REFERENCE {
     // Given this downloads large file from internet, so allows some retry
     errorStrategy 'retry', maxRetries: 2
-    tag "Downloading genome"
+    // Use split here rather than tokenize since its string
+    tag "Downloading reference ${link.split('/')[-1]}"
     
     publishDir (
 		path: "${download_dir}",
@@ -13,11 +14,13 @@ process DOWNLOAD_GENOME {
     path(download_dir)
 
     output:
-    path("hg38.fa.gz"), emit: genome
+    path("*.gz"), emit: reference
     
     script:
     // Check https://hgdownload.soe.ucsc.edu/goldenpath/hg38/bigZips
+    // Check https://ftp.ensembl.org/pub/release-113/fasta/homo_sapiens/dna/
+    def filename = link.split('/')[-1]
     """
-    wget ${link} -O hg38.fa.gz
+    wget ${link} -O ${filename}
     """
 }

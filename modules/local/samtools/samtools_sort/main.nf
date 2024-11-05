@@ -1,6 +1,6 @@
-process SAMTOOLS_TO_BAM {
+process SAMTOOLS_SORT {
     debug true
-    tag "Converting ${sam} to bam"
+    tag "Sorting ${bam}"
     container 'biocontainers/samtools:1.21--h50ea8bc_0'
 
     publishDir (
@@ -12,16 +12,14 @@ process SAMTOOLS_TO_BAM {
 
 
     input:
-    tuple val(sample_name), path(sam)
+    tuple val(sample_name), path(bam)
     output:
-    tuple val(sample_name), path("${sample_name}.bam"), emit: bam
-    path("versions.yml"),                               emit: versions
+    path("${sample_name}_sorted.bam"),  emit: bam
+    path("versions.yml"),               emit: versions
 
     script:
     """
-    samtools view -Sb -o ${sample_name}.bam \
-        --threads ${task.cpus}  \
-        ${sam}
+    samtools sort -o ${sample_name}_sorted.bam ${bam}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

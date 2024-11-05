@@ -2,4 +2,5 @@
 work/
 .nextflow
 .nextflow.log*
-*.fa.gz
+*fa*
+*gtf*

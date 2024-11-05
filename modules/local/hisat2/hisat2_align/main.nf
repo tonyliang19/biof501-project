@@ -21,7 +21,7 @@ process HISAT2_ALIGN {
     hisat2 -x ${index}/${fa_name} \
         -1 ${reads[0]} -2 ${reads[1]} \
         -S ${sample_name}.sam \
-        --summary-file hisa2-${sample_name}.log
+        --summary-file hisat2-${sample_name}.log
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         hisat2: \$(hisat2 --version | grep -o 'version [^ ]*' | head -n 1 | cut -d ' ' -f 2)

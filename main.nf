@@ -9,6 +9,8 @@ include { HISAT2_BUILD }            from "./modules/local/hisat2/hisat2_build"
 include { HISAT2_ALIGN }            from "./modules/local/hisat2/hisat2_align"
 include { DOWNLOAD_REFERENCE }      from "./modules/local/download_reference"
 include { TRIMGALORE }              from "./modules/local/trimgalore"
+include { SAMTOOLS_TO_BAM }         from "./modules/local/samtools/samtools_to_bam"
+include { SAMTOOLS_SORT }           from "./modules/local/samtools/samtools_sort"
 include { softwareVersionsToYAML }  from "./modules/nf-core/main.nf"
 
 
@@ -68,12 +70,17 @@ workflow {
     HISAT2_BUILD ( genome )
 
     HISAT2_ALIGN ( record, HISAT2_BUILD.out.index )
+
+    SAMTOOLS_TO_BAM ( HISAT2_ALIGN.out.sam )
+    SAMTOOLS_SORT ( SAMTOOLS_TO_BAM.out.bam )
     
 //     // TRINITY ( TRIMGALORE.out.reads )
 //     // Collect versions from modules
     ch_versions = ch_versions
         .mix( HISAT2_BUILD.out.versions )
-        .mix( HISAT2_ALIGN.out.versions)
+        .mix( HISAT2_ALIGN.out.versions )
+        .mix( SAMTOOLS_TO_BAM.out.versions )
+        .mix( SAMTOOLS_SORT.out.versions )
 //       .mix ( FASTQC.out.versions )
 //        .mix ( TRIMGALORE.out.versions )
 

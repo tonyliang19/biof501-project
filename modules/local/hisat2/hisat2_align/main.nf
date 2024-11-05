@@ -12,9 +12,9 @@ process HISAT2_ALIGN {
     tuple val(sample_name), path(reads)
     tuple val(fa_name), path(index)
     output:
-    path("${sample_name}.sam"), emit: sam
-    path("*.log"),              emit: log
-    path('versions.yml'),       emit: versions
+    tuple val(sample_name), path("${sample_name}.sam"), emit: sam
+    path("*.log"),                                      emit: log
+    path('versions.yml'),                               emit: versions
     script:
     // Compute first, then collect the version of binary ran
     """

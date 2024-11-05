@@ -1,22 +1,26 @@
 process HISAT2_BUILD {
-    debug true
     tag "Indexing genome using hisat2"
-    container "biocontainers/hisat2:2.0.4--py35_1"
+    publishDir (
+		path: "${params.outdir}/${task.process.tokenize(':').join('/').toLowerCase()}/",
+		mode: "${params.publish_dir_mode}",
+        // https://nextflow.slack.com/archives/C02T98A23U7/p1648120122138739
+        saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+	)
 
     input:
     // This is take in as a map, able to retrieve element from map_name.key_name
     path(fa)
     output:
-    path("hisat2") ,        emit: index
-    path('versions.yml'),   emit: versions
+    tuple val(fa.baseName), path("hisat2"), emit: index
+    path('versions.yml'),                   emit: versions
     script:
     // Compute first, then collect the version of binary ran
-    def 
 
     """
+    gunzip ${fa}
     mkdir hisat2
     hisat2-build -p ${task.cpus} \
-        ${fa} \
+        ${fa.baseName} \
         hisat2/${fa.baseName}
 
     cat <<-END_VERSIONS > versions.yml

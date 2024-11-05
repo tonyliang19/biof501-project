@@ -7,17 +7,11 @@
 include { FASTQC }                  from "./modules/local/fastqc"
 include { HISAT2_BUILD }            from "./modules/local/hisat2/hisat2_build"
 include { HISAT2_ALIGN }            from "./modules/local/hisat2/hisat2_align"
-include { DOWNLOAD_GENOME }         from "./modules/local/download_genome"
+include { DOWNLOAD_REFERENCE }      from "./modules/local/download_reference"
 //include { TRIMGALORE }              from "./modules/local/trimgalore"
 //include { TRINITY }                 from "./modules/local/trinity"
 include { softwareVersionsToYAML }  from "./modules/nf-core/main.nf"
 
-def getGenomeName(genome_url) {
-    // Parse the url containing genome and get its name
-    def name = genome_url.tokenize('/')[-1]
-    return name.replaceAll(/\.(fa|fasta|fa\.gz|fasta\.gz)$/, '') // Strips extensions like ".fa", ".fasta", ".fa.gz", or ".fasta.gz"
-    
-}
 
 workflow {
     println "Hello World"
@@ -45,20 +39,28 @@ workflow {
         .set { record }
 
     // Download a genome if not provided from params
-    // if (params.genome.startsWith('http') || params.genome.startsWith('ftp')) {
-    //     def genome_file = file("data/${getGenomeName(params.genome)}.fa.gz")
+    if ( file("data/${params.genome.tokenize('/')[-1]}").exists() &&
+        file("data/${params.genome_annotation.tokenize('/')[-1]}").exists() ) {
+        // When both the genome and its annotation exists in local then used them directly
+        genome = file("data/${params.genome.tokenize('/')[-1]}")
+        gtf = file("data/${params.genome_annotation.tokenize('/')[-1]}")
+    } else {
+        // Otherwise download to disk
+        ch_refs = Channel.fromList([params.genome, params.genome_annotation])
+        //ch_refs.map { it -> it.tokenize['/'][-1] }.view()
+        DOWNLOAD_REFERENCE ( ch_refs , file("data"))
+        DOWNLOAD_REFERENCE.out.reference
+                        .branch { it ->
+                            genome: it.toString().contains('fa.gz')
+                            gtf: it.toString().contains('gtf.gz')
+                        }
+                        .set { refs }
+        genome = refs.genome
+        gtf = refs.gtf
 
-    //     if (genome_file.exists()) {
-    //         println "Found genome, skipping download"
-    //         genome = genome_file
-    //         return genome
-    //     } else {
-    //         println "Starting download of genome"
-    //         genome = DOWNLOAD_GENOME(params.genome, file("data/"))
-    //         return genome
-    //     }
-    // }
-    // record.view()
+
+    }
+    
     // Execute initial quality control on fastq data
     //FASTQC ( record )
 
@@ -67,23 +69,23 @@ workflow {
     // TRIMGALORE ( record )
     HISAT2_BUILD ( genome )
 
-    HISAT2_ALIGN ( HISAT2_BUILD.out.index )
+//     HISAT2_ALIGN ( record, HISAT2_BUILD.out.index )
     
-    // TRINITY ( TRIMGALORE.out.reads )
-    // Collect versions from modules
-    ch_versions
-        .mix( HISAT2_BUILD.out.versions )
-        .mix( HISAT2_ALIGN.out.versions)
-//       .mix ( FASTQC.out.versions )
-//        .mix ( TRIMGALORE.out.versions )
+//     // TRINITY ( TRIMGALORE.out.reads )
+//     // Collect versions from modules
+//     ch_versions
+//         .mix( HISAT2_BUILD.out.versions )
+//         .mix( HISAT2_ALIGN.out.versions)
+// //       .mix ( FASTQC.out.versions )
+// //        .mix ( TRIMGALORE.out.versions )
 
-    // Lastly collect all software versions and to YAML
-    softwareVersionsToYAML(ch_versions)
-        .collectFile(
-            storeDir: "${params.outdir}/pipeline_info",
-            name: 'dge_analysis_versions.yml',
-            sort: true,
-            newLine: true
-            )
+    // // Lastly collect all software versions and to YAML
+    // softwareVersionsToYAML(ch_versions)
+    //     .collectFile(
+    //         storeDir: "${params.outdir}/pipeline_info",
+    //         name: 'dge_analysis_versions.yml',
+    //         sort: true,
+    //         newLine: true
+    //         )
 
 }

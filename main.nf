@@ -8,8 +8,7 @@ include { FASTQC }                  from "./modules/local/fastqc"
 include { HISAT2_BUILD }            from "./modules/local/hisat2/hisat2_build"
 include { HISAT2_ALIGN }            from "./modules/local/hisat2/hisat2_align"
 include { DOWNLOAD_REFERENCE }      from "./modules/local/download_reference"
-//include { TRIMGALORE }              from "./modules/local/trimgalore"
-//include { TRINITY }                 from "./modules/local/trinity"
+include { TRIMGALORE }              from "./modules/local/trimgalore"
 include { softwareVersionsToYAML }  from "./modules/nf-core/main.nf"
 
 
@@ -41,6 +40,7 @@ workflow {
     // Download a genome if not provided from params
     if ( file("data/${params.genome.tokenize('/')[-1]}").exists() &&
         file("data/${params.genome_annotation.tokenize('/')[-1]}").exists() ) {
+        log.info "Found local files for genome and annotation file"
         // When both the genome and its annotation exists in local then used them directly
         genome = file("data/${params.genome.tokenize('/')[-1]}")
         gtf = file("data/${params.genome_annotation.tokenize('/')[-1]}")
@@ -57,10 +57,8 @@ workflow {
                         .set { refs }
         genome = refs.genome
         gtf = refs.gtf
-
-
     }
-    
+
     // Execute initial quality control on fastq data
     //FASTQC ( record )
 
@@ -69,23 +67,23 @@ workflow {
     // TRIMGALORE ( record )
     HISAT2_BUILD ( genome )
 
-//     HISAT2_ALIGN ( record, HISAT2_BUILD.out.index )
+    HISAT2_ALIGN ( record, HISAT2_BUILD.out.index )
     
 //     // TRINITY ( TRIMGALORE.out.reads )
 //     // Collect versions from modules
-//     ch_versions
-//         .mix( HISAT2_BUILD.out.versions )
-//         .mix( HISAT2_ALIGN.out.versions)
-// //       .mix ( FASTQC.out.versions )
-// //        .mix ( TRIMGALORE.out.versions )
+    ch_versions = ch_versions
+        .mix( HISAT2_BUILD.out.versions )
+        .mix( HISAT2_ALIGN.out.versions)
+//       .mix ( FASTQC.out.versions )
+//        .mix ( TRIMGALORE.out.versions )
 
-    // // Lastly collect all software versions and to YAML
-    // softwareVersionsToYAML(ch_versions)
-    //     .collectFile(
-    //         storeDir: "${params.outdir}/pipeline_info",
-    //         name: 'dge_analysis_versions.yml',
-    //         sort: true,
-    //         newLine: true
-    //         )
+    // Lastly collect all software versions and to YAML
+    softwareVersionsToYAML(ch_versions)
+        .collectFile(
+            storeDir: "${params.outdir}/pipeline_info",
+            name: 'dge_analysis_versions.yml',
+            sort: true,
+            newLine: true
+            )
 
 }

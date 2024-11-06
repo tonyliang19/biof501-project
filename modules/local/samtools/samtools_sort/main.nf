@@ -8,7 +8,7 @@ process SAMTOOLS_SORT {
 		mode: "${params.publish_dir_mode}",
         // https://nextflow.slack.com/archives/C02T98A23U7/p1648120122138739
         saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
-	)
+    )
 
 
     input:

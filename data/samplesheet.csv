@@ -1,3 +1,5 @@
-sample_name,fastq1,fastq2
-SRR29891675,data/SRR29891675_sample_1.fastq.gz,data/SRR29891675_sample_2.fastq.gz
-SRR29891678,data/SRR29891678_sample_1.fastq.gz,data/SRR29891678_sample_2.fastq.gz
+sample,fastq1,fastq2
+control_rep1,data/SRR29891678_sample_1.fastq.gz,data/SRR29891678_sample_2.fastq.gz
+control_rep2,data/SRR29891677_sample_1.fastq.gz,data/SRR29891677_sample_2.fastq.gz
+treatment_rep1,data/SRR29891675_sample_1.fastq.gz,data/SRR29891675_sample_2.fastq.gz
+treatment_rep2,data/SRR29891674_sample_1.fastq.gz,data/SRR29891674_sample_2.fastq.gz

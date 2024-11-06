@@ -31,14 +31,34 @@ workflow {
     ch_versions = Channel.empty()
 
     // This channel reads the samplesheet, and construct path of the records
-    Channel
+        Channel
         .fromPath( params.samplesheet )
         .splitCsv( header: true )
-        // This gives [ sample_name, [ reads ] ]
+        // This gives [ sample_name, [ name, condition ], [ reads ] ]
         .map { row ->
-            [ row.sample_name, [ file(row.fastq1), file(row.fastq2) ] ]
+            // Splits sample name from condition_rep
+            def split_name = row.sample_name.split("_")
+            // Get run name from the fastq file
+            def run_name = file(row.fastq1.split("_1.fastq.gz")[0]).getSimpleName()
+            [run_name , split_name[0], split_name[1], [ file(row.fastq1), file(row.fastq2) ] ]
         }
+        .set { raw_record }
+    
+    // Use only these relevant values for process running
+    raw_record
+        .map { run_name, condition, rep, reads -> [ run_name, reads ] }
         .set { record }
+
+    // Then extract the metadata to save it as csv for later use
+    // Need extra row as header of columns
+    header_row = Channel.fromList(['run_name,condition,rep'])
+    // Then concat it with the relevant metadata
+    header_row
+        .concat(  
+            record.map { it -> it.join(",") }
+        )
+        .collectFile(name: 'metadata.csv', storeDir: 'data', newLine: true, sort: false)
+        .set { metadata }
 
     // Download a genome if not provided from params
     if ( file("data/${params.genome.tokenize('/')[-1]}").exists() &&
@@ -50,7 +70,9 @@ workflow {
     } else {
         // Otherwise download to disk
         ch_refs = Channel.fromList([params.genome, params.genome_annotation])
-        //ch_refs.map { it -> it.tokenize['/'][-1] }.view()
+        //
+        // PROCESS: Download relevant references like fa, gtf to data directory
+        //
         DOWNLOAD_REFERENCE ( ch_refs , file("data"))
         DOWNLOAD_REFERENCE.out.reference
                         .branch { it ->
@@ -61,28 +83,42 @@ workflow {
         genome = refs.genome
         gtf = refs.gtf
     }
-
-    // Execute initial quality control on fastq data
-    //FASTQC ( record )
-
-    // Then run trimming adapters from qced fastq
-    // TODO: This step might be failing now?
-    // TRIMGALORE ( record )
+    //
+    // PROCESS: Execute initial quality control on fastq data
+    //
+    FASTQC ( record )
+    //
+    // PROCESS: Trim on low quality reads
+    //
+    TRIMGALORE ( record )
+    //
+    // PROCESS: Build genome index for align later
     HISAT2_BUILD ( genome )
-
+    //
+    // PROCESS: Align the trimmed reads to reference fasta (genome)
+    //
     HISAT2_ALIGN ( record, HISAT2_BUILD.out.index )
-
+    //
+    // PROCESS: Convert the the aligned sam files to bam
+    //
     SAMTOOLS_TO_BAM ( HISAT2_ALIGN.out.sam )
+    // 
+    // PROCESS: Sort these bam files
+    //
     SAMTOOLS_SORT ( SAMTOOLS_TO_BAM.out.bam )
-    // Collect all the bam files generated and pass in 1 as one arg
+    // 
+    // PROCESS: Collect all the bam files generated and pass in 1 as one arg, and count
+    //
     FEATURE_COUNTS ( SAMTOOLS_SORT.out.bam.collect(), gtf )
-//     // TRINITY ( TRIMGALORE.out.reads )
-//     // Collect versions from modules
+
+    // =============================================================================
+    // Collect versions from modules
     ch_versions = ch_versions
         .mix( HISAT2_BUILD.out.versions )
         .mix( HISAT2_ALIGN.out.versions )
         .mix( SAMTOOLS_TO_BAM.out.versions )
         .mix( SAMTOOLS_SORT.out.versions )
+        .mix( FEATURE_COUNTS.out.versions )
 //       .mix ( FASTQC.out.versions )
 //        .mix ( TRIMGALORE.out.versions )
 
@@ -91,7 +127,7 @@ workflow {
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
             name: 'dge_analysis_versions.yml',
-            sort: true,
+            sort: false,
             newLine: true
             )
 

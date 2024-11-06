@@ -11,6 +11,7 @@ include { DOWNLOAD_REFERENCE }      from "./modules/local/download_reference"
 include { TRIMGALORE }              from "./modules/local/trimgalore"
 include { SAMTOOLS_TO_BAM }         from "./modules/local/samtools/samtools_to_bam"
 include { SAMTOOLS_SORT }           from "./modules/local/samtools/samtools_sort"
+include { FEATURE_COUNTS }          from "./modules/local/feature_counts"
 include { softwareVersionsToYAML }  from "./modules/nf-core/main.nf"
 
 
@@ -73,7 +74,8 @@ workflow {
 
     SAMTOOLS_TO_BAM ( HISAT2_ALIGN.out.sam )
     SAMTOOLS_SORT ( SAMTOOLS_TO_BAM.out.bam )
-    
+    // Collect all the bam files generated and pass in 1 as one arg
+    FEATURE_COUNTS ( SAMTOOLS_SORT.out.bam.collect(), gtf )
 //     // TRINITY ( TRIMGALORE.out.reads )
 //     // Collect versions from modules
     ch_versions = ch_versions

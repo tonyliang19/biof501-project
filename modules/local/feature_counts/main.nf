@@ -1,16 +1,32 @@
 process FEATURE_COUNTS {
-  debug true
-  container 'biocontainers/bioconductor-rsubread:2.4.0--r40h037d062_0'
-  input:
-  path(bam)
-  path(gtf)
-  output:
-  path("*.rds")
+    tag "Running feature counts"
+    container 'biocontainers/bioconductor-rsubread:2.4.0--r40h037d062_0'
 
-  script:
-  //featureCounts.R --bam "${bam.join()}" --annot ${gtf}
-  """
-  gunzip -f ${gtf}
-  featureCounts.R "${bam}" ${gtf.baseName}
-  """
+    publishDir (
+		path: "${params.outdir}/${task.process.tokenize(':').join('/').toLowerCase()}",
+		mode: "${params.publish_dir_mode}",
+        // https://nextflow.slack.com/archives/C02T98A23U7/p1648120122138739
+        saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+    )
+
+
+    input:
+    path(bam)
+    path(gtf)
+
+    output:
+    path("*.rds"), emit: feature_count
+    path("versions.yml"), emit: versions
+    script:
+
+    """
+    gunzip -f ${gtf}
+    featureCounts.R "${bam}" ${gtf.baseName}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        R: \$(echo \$(R --version) | sed -n 's/^R version \\([0-9.]*\\).*/\\1/p')
+        Rsubread: \$(Rscript -e "cat(as.character(packageVersion('Rsubread')))")
+    END_VERSIONS
+    """
 }

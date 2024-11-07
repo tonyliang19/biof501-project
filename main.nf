@@ -16,7 +16,7 @@ include { softwareVersionsToYAML }  from "./modules/nf-core/main.nf"
 
 
 workflow {
-    println "Hello World"
+    log.info "Starting the DGE Analysis workflow..."
     /*
         Should take in a samplesheet.csv where each entry is geo accession code
         then have process to download fastq file from the accesion code
@@ -131,5 +131,53 @@ workflow {
             sort: false,
             newLine: true
             )
-
+    
 }
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    COMPLETION EMAIL AND SUMMARY
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+workflow.onComplete {
+    println "Successfully completed"
+    /*
+    // This bit cannot be run interactively????, only try when sending as pipeline 
+    jsonStr = JsonOutput.toJson(params)
+    file("${params.outdir}/params.json").text = JsonOutput.prettyPrint(jsonStr)
+    */
+    println ( workflow.success ? 
+    """
+    ===============================================================================
+    Pipeline execution summary
+    -------------------------------------------------------------------------------
+
+    Run as      : ${workflow.commandLine}
+    Started at  : ${workflow.start}
+    Completed at: ${workflow.complete}
+    Duration    : ${workflow.duration}
+    Success     : ${workflow.success}
+    workDir     : ${workflow.workDir}
+    Config files: ${workflow.configFiles}
+    exit status : ${workflow.exitStatus}
+
+    --------------------------------------------------------------------------------
+    ================================================================================
+    """.stripIndent() : """
+    Failed: ${workflow.errorReport}
+    exit status : ${workflow.exitStatus}
+    """.stripIndent()
+    )
+}
+
+workflow.onError = {
+println "Error: something went wrong, check the pipeline log at '.nextflow.log"
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+THE END
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/  
+
+

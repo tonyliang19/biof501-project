@@ -13,8 +13,9 @@ process TRIMGALORE {
     input:
     tuple val(sample_name), path(reads)
     output:
-    tuple val(sample_name), path("*{3prime,5prime,trimmed,val}*.fq.gz"),    emit: reads
-    path("versions.yml"),                                                   emit: versions
+    // See here https://github.com/FelixKrueger/TrimGalore/issues/60
+    tuple val(sample_name), path("*val*.fq.gz"),    emit: reads
+    path("versions.yml"),                           emit: versions
 
     script:
     """

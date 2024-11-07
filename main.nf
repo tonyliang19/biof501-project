@@ -97,7 +97,8 @@ workflow {
     //
     // PROCESS: Align the trimmed reads to reference fasta (genome)
     //
-    HISAT2_ALIGN ( record, HISAT2_BUILD.out.index )
+    // [ sample_name, [read1, read2] ], [ fa_name, hisat2 ]
+    HISAT2_ALIGN ( TRIMGALORE.out.reads, HISAT2_BUILD.out.index )
     //
     // PROCESS: Convert the the aligned sam files to bam
     //

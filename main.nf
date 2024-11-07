@@ -115,13 +115,13 @@ workflow {
     // =============================================================================
     // Collect versions from modules
     ch_versions = ch_versions
-        .mix( HISAT2_BUILD.out.versions )
-        .mix( HISAT2_ALIGN.out.versions )
-        .mix( SAMTOOLS_TO_BAM.out.versions )
-        .mix( SAMTOOLS_SORT.out.versions )
-        .mix( FEATURE_COUNTS.out.versions )
-//       .mix ( FASTQC.out.versions )
-//        .mix ( TRIMGALORE.out.versions )
+        .mix ( FASTQC.out.versions )
+        .mix ( TRIMGALORE.out.versions )
+        .mix ( HISAT2_BUILD.out.versions )
+        .mix ( HISAT2_ALIGN.out.versions )
+        .mix ( SAMTOOLS_TO_BAM.out.versions )
+        .mix ( SAMTOOLS_SORT.out.versions )
+        .mix ( FEATURE_COUNTS.out.versions )
 
     // Lastly collect all software versions and to YAML
     softwareVersionsToYAML(ch_versions)

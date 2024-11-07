@@ -15,13 +15,14 @@ process FEATURE_COUNTS {
     path(gtf)
 
     output:
-    path("*.rds"), emit: feature_count
-    path("versions.yml"), emit: versions
-    script:
+    path("*.rds"),          emit: feature_count
+    path("*.log"),          emit: log
+    path("versions.yml"),   emit: versions
 
+    script:
     """
     gunzip -f ${gtf}
-    featureCounts.R "${bam}" ${gtf.baseName}
+    featureCounts.R "${bam}" ${gtf.baseName} > feature_counts.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

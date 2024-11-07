@@ -1,7 +1,7 @@
 process HISAT2_ALIGN {
     tag "Aligning genome using hisat2 at sample ${sample_name}"
     publishDir (
-		path: "${params.outdir}/${task.process.tokenize(':').join('/').toLowerCase()}/",
+		path: "${params.outdir}/${task.process.tokenize(':').join('/').toLowerCase()}/${sample_name}",
 		mode: "${params.publish_dir_mode}",
         // https://nextflow.slack.com/archives/C02T98A23U7/p1648120122138739
         saveAs: { filename -> filename.equals('versions.yml') ? null : filename }

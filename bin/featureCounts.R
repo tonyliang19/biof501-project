@@ -15,6 +15,10 @@ gtf <- args[2]
 fc <- featureCounts(files = bam, annot.ext = gtf, isGTFAnnotationFile = TRUE, isPairedEnd = TRUE,
 GTF.featureType = "gene")
 
+# Also rename those column names of counts to remove the _sorted.bam suffix
+pattern <- "_sorted.bam"
+colnames(fc$counts) <- gsub(pattern, "", colnames(fc$counts))
+
 # Lastly write it to file
 file <- "feature_counts.rds"
 saveRDS(fc, file = file)

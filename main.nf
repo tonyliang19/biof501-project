@@ -42,20 +42,21 @@ workflow {
             def run_name = file(row.fastq1.split("_1.fastq.gz")[0]).getSimpleName()
             [run_name , split_name[0], split_name[1], [ file(row.fastq1), file(row.fastq2) ] ]
         }
-        .set { raw_record }
+        .multiMap { run_name, condition, rep, reads ->
+            record: [ run_name , reads ] 
+            meta: [ run_name, condition, rep ] 
+        }
+        .set { ch_input }
     
-    // Use only these relevant values for process running
-    raw_record
-        .map { run_name, condition, rep, reads -> [ run_name, reads ] }
-        .set { record }
-
     // Then extract the metadata to save it as csv for later use
     // Need extra row as header of columns
     header_row = Channel.fromList(['run_name,condition,rep'])
     // Then concat it with the relevant metadata
     header_row
         .concat(  
-            record.map { it -> it.join(",") }
+            ch_input.meta
+                    // For the metadata info store it for later use at downstream analysis
+                    .map { it -> it.join(",") }
         )
         .collectFile(name: 'metadata.csv', storeDir: 'data', newLine: true, sort: false)
         .set { metadata }
@@ -86,11 +87,11 @@ workflow {
     //
     // PROCESS: Execute initial quality control on fastq data
     //
-    FASTQC ( record )
+    FASTQC ( ch_input.record )
     //
     // PROCESS: Trim on low quality reads
     //
-    TRIMGALORE ( record )
+    TRIMGALORE ( ch_input.record )
     //
     // PROCESS: Build genome index for align later
     HISAT2_BUILD ( genome )
@@ -111,6 +112,9 @@ workflow {
     // PROCESS: Collect all the bam files generated and pass in 1 as one arg, and count
     //
     FEATURE_COUNTS ( SAMTOOLS_SORT.out.bam.collect(), gtf )
+    //
+    // PROCESS: Perform downstream analysis using limma and edgeR
+
 
     // =============================================================================
     // Collect versions from modules

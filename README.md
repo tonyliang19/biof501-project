@@ -96,7 +96,7 @@ Then the pipeline could be run as the following using a test data contained alre
 nextflow run main.nf \
     --samplesheet data/samplesheet.csv \
     --outdir results \
-    -profile docker
+    -profile docker,test
 ```
 
 Overall the running command should follow this structure:
@@ -105,10 +105,16 @@ Overall the running command should follow this structure:
 nextflow run main.nf \
     --samplesheet <SOME_SAMPLESHEET_CSV> \
     --outdir <OUTDIR> \
-    -profile docker
+    -profile docker,test
 ```
 
 where `<SOME_SAMPLESHEET_CSV>` is the csv data that follows format in [preparing-input section](#preparing-input) and `OUTDIR` being the directory you want the output files to store.
 
 > [!NOTE]
 > The pipeline should take some time run for the very first time, because of the containerized images it have to pull from internet, and downloads of some reference data
+>
+> Also the profile there should be NO SPACE, i.e.:
+>
+> -profile docker,test works
+>
+> -profile docker, test DO NOT WORK

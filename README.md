@@ -35,14 +35,77 @@ Using the [GSE272659 study](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=G
 4. [GSM8408772 NT-Doxo-2](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM8408772), which corresponds to run [SRR29891674](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browser&acc=SRR29891674&display=metadata)
 
 
-Construct a metadata for your samples like the following:
 
-```csv
-sample_name,condition
-SRR29891678,control
-SRR29891675,treatment
+## Setup
+
+There are some software dependencies in order to run this pipeline, corresponding softwares and versions are tested in the following:
+
+```bash
+# <sofware>-<version_number>
+bash-5.1.16
+jave-11.0.22
+Docker--20.10.23
+git-2.34.1
+nextflow-24.04.4
 ```
 
-The `sample_name` here is the run name.
+Other tools used in the pipeline are from public repository docker images retrieved mostly from the [biocontainers organization](https://quay.io/organization/biocontainers)
+
+For a list of software images used in this pipeline see the configuration file [here](nextflow.config) under the `process` scope.
+
+### Preparing Input
+
+> [!NOTE]
+> This instruction is yet not completed, still under construction
+
+First, prepare a samplesheet with your input data that looks as follows:
+
+**data/samplesheet.csv**:
+
+```csv
+sample_name,fastq1,fastq2
+control_rep1,data/SRR29891678_sample_1.fastq.gz,data/SRR29891678_sample_2.fastq.gz
+control_rep2,data/SRR29891677_sample_1.fastq.gz,data/SRR29891677_sample_2.fastq.gz
+treatment_rep1,data/SRR29891675_sample_1.fastq.gz,data/SRR29891675_sample_2.fastq.gz
+treatment_rep2,data/SRR29891674_sample_1.fastq.gz,data/SRR29891674_sample_2.fastq.gz
+```
+
+The `sample_name` here ilustrates condition and replicate number together
+
+
+Each row represents a pair of fastq files (paired end) corresponding to some condition + replicate.
 
 TODO: this sample data section need to be rewritten, since the metadata part can be inside the samplesheet
+
+## Running Instruction
+
+
+First, clone the this github repository and change the working directory to the clone repo using:
+
+```bash
+# Assuming you use one of bash/zsh or other unix systems
+# NO Powershell
+git clone https://github.com/tonyliang19/biof501-project.git
+cd biof501-project/
+```
+
+Then the pipeline could be run as the following using a test data contained already in this repository:
+
+```bash
+# The outdir could also be replace to some other directory of your preference
+nextflow run main.nf \
+    --samplesheet data/samplesheet.csv \
+    --outdir results \
+    -profile docker
+```
+
+Overall the running command should follow this structure:
+
+```bash
+nextflow run main.nf \
+    --samplesheet <SOME_SAMPLESHEET_CSV> \
+    --outdir <OUTDIR> \
+    -profile docker
+```
+
+where `<SOME_SAMPLESHEET_CSV>` is the csv data that follows format in [preparing-input section](#preparing-input) and `OUTDIR` being the directory you want the output files to store.

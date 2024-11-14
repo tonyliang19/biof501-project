@@ -4,6 +4,13 @@ Differential Gene Expression Analysis
 
 Author: Tony Liang
 
+**Table of Contents**:
+
+1. [Project Outline](#project-outline)
+2. [Setup](#setup)
+3. [Preparing Input](#preparing-input)
+4. [Running Instructions](#running-instruction)
+
 ## Project Outline
 
 
@@ -77,7 +84,7 @@ Each row represents a pair of fastq files (paired end) corresponding to some con
 
 TODO: this sample data section need to be rewritten, since the metadata part can be inside the samplesheet
 
-## Running Instruction
+### Running Instruction
 
 
 First, clone the this github repository and change the working directory to the clone repo using:

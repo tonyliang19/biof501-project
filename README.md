@@ -109,3 +109,6 @@ nextflow run main.nf \
 ```
 
 where `<SOME_SAMPLESHEET_CSV>` is the csv data that follows format in [preparing-input section](#preparing-input) and `OUTDIR` being the directory you want the output files to store.
+
+> [!NOTE]
+> The pipeline should take some time run for the very first time, because of the containerized images it have to pull from internet, and downloads of some reference data

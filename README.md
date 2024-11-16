@@ -4,12 +4,73 @@ Differential Gene Expression Analysis
 
 Author: Tony Liang
 
+---
+
 **Table of Contents**:
 
 1. [Project Outline](#project-outline)
-2. [Setup](#setup)
-3. [Preparing Input](#preparing-input)
-4. [Running Instructions](#running-instruction)
+1. [Repository Structure](#directory-contents)
+1. [Setup](#setup)
+1. [Preparing Input](#preparing-input)
+1. [Running Instructions](#running-instruction)
+
+## Repository Structure
+
+The following ilustrates the tree structure of this repository, those that ends with `/` symbol are directories, otherwise it is treated as a regular file. 
+
+This structure is adapted from **nf-core** standard worfklow from the [rnaseq](https://github.com/nf-core/rnaseq/tree/master) repository.
+
+```bash
+./
+├── Makefile
+├── README.md
+├── bin/
+│   └── featureCounts.R*
+├── conf/
+│   ├── base.config
+│   └── test.config
+├── data/
+│   ├── SRR29891674_sample_1.fastq.gz
+│   ├── SRR29891674_sample_2.fastq.gz
+│   ├── SRR29891675_sample_1.fastq.gz
+│   ├── SRR29891675_sample_2.fastq.gz
+│   ├── SRR29891677_sample_1.fastq.gz
+│   ├── SRR29891677_sample_2.fastq.gz
+│   ├── SRR29891678_sample_1.fastq.gz
+│   ├── SRR29891678_sample_2.fastq.gz
+│   └── samplesheet.csv
+├── main.nf
+├── modules/
+│   ├── local/
+│   │   ├── download_reference/
+│   │   │   └── main.nf
+│   │   ├── fastqc/
+│   │   │   └── main.nf
+│   │   ├── feature_counts/
+│   │   │   └── main.nf
+│   │   ├── hisat2/
+│   │   │   ├── hisat2_align/
+│   │   │   └── hisat2_build/
+│   │   ├── samtools/
+│   │   │   ├── samtools_sort/
+│   │   │   └── samtools_to_bam/
+│   │   └── trimgalore/
+│   │       └── main.nf
+│   └── nf-core/
+│       └── main.nf
+├── nextflow.config
+└── run_nxf.sh*
+```
+
+### Directories
+
+- `bin`: This directory contains **executable** binary scripts used in the processes, provided if you have the relevant binary installed like `Rscript` or `python3`. For more information please see [here](bin/README.md).
+- `modules`:
+- `data`:
+- `conf`:
+
+
+
 
 ## Project Outline
 

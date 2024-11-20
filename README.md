@@ -65,7 +65,9 @@ This structure is adapted from **nf-core** standard worfklow from the [rnaseq](h
 ### Directories
 
 - `bin`: This directory contains **executable** binary scripts used in the processes, provided if you have the relevant binary installed like `Rscript` or `python3`. For more information please see [here](bin/README.md).
-- `modules`:
+- `modules`: This directory contains nextflow processes definitions following these conventions:
+    - `local/<tool_name>/main.nf`: `<tool_name>` would be an actual binary tool that could be treated as smallest unit software to use in the workflow.
+    - `nf-core/main.nf`: Code adapted from nf-core
 - `data`:
 - `conf`:
 
@@ -186,3 +188,26 @@ where `<SOME_SAMPLESHEET_CSV>` is the csv data that follows format in [preparing
 > -profile docker,test works
 >
 > -profile docker, test DO NOT WORK
+
+
+## Reference
+
+Nextflow related
+
+- [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)
+
+    > Ewels PA, Peltzer A, Fillinger S, Patel H, Alneberg J, Wilm A, Garcia MU, Di Tommaso P, Nahnsen S. The nf-core framework for community-curated bioinformatics pipelines. Nat Biotechnol. 2020 Mar;38(3):276-278. doi: 10.1038/s41587-020-0439-x. PubMed PMID: 32055031.
+
+- [Nextflow](https://pubmed.ncbi.nlm.nih.gov/28398311/)
+
+    > Di Tommaso P, Chatzou M, Floden EW, Barja PP, Palumbo E, Notredame C. Nextflow enables reproducible computational workflows. Nat Biotechnol. 2017 Apr 11;35(4):316-319. doi: 10.1038/nbt.3820. PubMed PMID: 28398311.
+
+Pipeline tools
+
+- [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+
+  > Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
+
+- [featureCounts](https://pubmed.ncbi.nlm.nih.gov/24227677/)
+
+  > Liao Y, Smyth GK, Shi W. featureCounts: an efficient general purpose program for assigning sequence reads to genomic features. Bioinformatics. 2014 Apr 1;30(7):923-30. doi: 10.1093/bioinformatics/btt656. Epub 2013 Nov 13. PubMed PMID: 24227677.

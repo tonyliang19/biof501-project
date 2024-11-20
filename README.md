@@ -192,7 +192,7 @@ where `<SOME_SAMPLESHEET_CSV>` is the csv data that follows format in [preparing
 
 ## Reference
 
-Nextflow related
+### Nextflow tools
 
 - [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)
 
@@ -211,3 +211,56 @@ Pipeline tools
 - [featureCounts](https://pubmed.ncbi.nlm.nih.gov/24227677/)
 
   > Liao Y, Smyth GK, Shi W. featureCounts: an efficient general purpose program for assigning sequence reads to genomic features. Bioinformatics. 2014 Apr 1;30(7):923-30. doi: 10.1093/bioinformatics/btt656. Epub 2013 Nov 13. PubMed PMID: 24227677.
+
+- [HISAT2](https://pubmed.ncbi.nlm.nih.gov/31375807/)
+
+  > Kim D, Paggi JM, Park C, Bennett C, Salzberg SL. Graph-based genome alignment and genotyping with HISAT2 and HISAT-genotype Graph-based genome alignment and genotyping with HISAT2 and HISAT-genotype. Nat Biotechnol. 2019 Aug;37(8):907-915. doi: 10.1038/s41587-019-0201-4. Epub 2019 Aug 2. PubMed PMID: 31375807.
+
+
+- [SAMtools](https://pubmed.ncbi.nlm.nih.gov/19505943/)
+
+  > Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, Durbin R; 1000 Genome Project Data Processing Subgroup. The Sequence Alignment/Map format and SAMtools. Bioinformatics. 2009 Aug 15;25(16):2078-9. doi: 10.1093/bioinformatics/btp352. Epub 2009 Jun 8. PubMed PMID: 19505943; PubMed Central PMCID: PMC2723002.
+
+
+- [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)
+
+
+### R packages
+
+- [R](https://www.R-project.org/)
+
+  > R Core Team (2017). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria.
+
+- [DESeq2](https://pubmed.ncbi.nlm.nih.gov/25516281/)
+
+  > Love MI, Huber W, Anders S. Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biol. 2014;15(12):550. PubMed PMID: 25516281; PubMed Central PMCID: PMC4302049.
+
+
+- [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html)
+
+  > H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
+
+
+- [pheatmap](https://CRAN.R-project.org/package=pheatmap)
+
+  > Raivo Kolde (2018). pheatmap: Pretty Heatmaps.
+
+- [RColorBrewer](https://CRAN.R-project.org/package=RColorBrewer)
+
+  > Erich Neuwirth (2014). RColorBrewer: ColorBrewer Palettes.
+
+
+### Software packaging/containerisation tools
+
+
+- [BioContainers](https://pubmed.ncbi.nlm.nih.gov/28379341/)
+
+  > da Veiga Leprevost F, Grüning B, Aflitos SA, Röst HL, Uszkoreit J, Barsnes H, Vaudel M, Moreno P, Gatto L, Weber J, Bai M, Jimenez RC, Sachsenberg T, Pfeuffer J, Alvarez RV, Griss J, Nesvizhskii AI, Perez-Riverol Y. BioContainers: an open-source and community-driven framework for software standardization. Bioinformatics. 2017 Aug 15;33(16):2580-2582. doi: 10.1093/bioinformatics/btx192. PubMed PMID: 28379341; PubMed Central PMCID: PMC5870671.
+
+- [Docker](https://dl.acm.org/doi/10.5555/2600239.2600241)
+
+  > Merkel, D. (2014). Docker: lightweight linux containers for consistent development and deployment. Linux Journal, 2014(239), 2. doi: 10.5555/2600239.2600241.
+
+- [Singularity](https://pubmed.ncbi.nlm.nih.gov/28494014/)
+
+  > Kurtzer GM, Sochat V, Bauer MW. Singularity: Scientific containers for mobility of compute. PLoS One. 2017 May 11;12(5):e0177459. doi: 10.1371/journal.pone.0177459. eCollection 2017. PubMed PMID: 28494014; PubMed Central PMCID: PMC5426675.

@@ -13,6 +13,8 @@ Author: Tony Liang
 1. [Setup](#setup)
 1. [Preparing Input](#preparing-input)
 1. [Running Instructions](#running-instruction)
+1. [Pipeline Output](#pipeline-output)
+1. [Reference](#reference)
 
 ## Repository Structure
 
@@ -189,6 +191,10 @@ where `<SOME_SAMPLESHEET_CSV>` is the csv data that follows format in [preparing
 >
 > -profile docker, test DO NOT WORK
 
+
+## Pipeline Output
+
+**TODO**: this section should add some sample output
 
 ## Reference
 

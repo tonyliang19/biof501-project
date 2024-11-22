@@ -1,6 +1,6 @@
 process ENHANCED_VOLCANO {
     debug true
-
+    tag "Plotting volcano of log2fc"
     container "quay.io/biocontainers/bioconductor-enhancedvolcano:1.20.0--r43hdfd78af_0"
 
     publishDir (

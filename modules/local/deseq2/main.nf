@@ -1,6 +1,6 @@
 process DESEQ2 {
     debug true
-
+    tag "Running DESEQ2 analysis"
     container "quay.io/biocontainers/bioconductor-deseq2:1.42.0--r43hf17093f_2"
 
     publishDir (

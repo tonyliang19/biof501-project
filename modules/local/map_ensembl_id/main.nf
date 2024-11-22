@@ -1,6 +1,6 @@
 process MAP_ENSEMBL_ID {
     debug true
-
+    tag "Converting emsembl gene id to gene symbol"
     container "quay.io/biocontainers/bioconductor-org.hs.eg.db:3.18.0--r43hdfd78af_0"
 
     publishDir (

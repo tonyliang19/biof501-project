@@ -11,8 +11,8 @@ data_path <- args[1]
 # Load inputs
 deseq_df <- read.csv(data_path)
 # Get the annotations and drop those that do not have a corresponding 
-annots <- select(org.Hs.eg.db, keys=deseq_df$ensembl_id, columns="SYMBOL", keytype="ENSEMBL_ID")
-merged <- merge(deseq_df, annots, by.x="ensembl_id", by.y="ENSEMBL_ID")
+annots <- select(org.Hs.eg.db, keys=deseq_df$ensembl_id, columns="SYMBOL", keytype="ENSEMBL")
+merged <- merge(deseq_df, annots, by.x="ensembl_id", by.y="ENSEMBL")
 mapped_df <- merged[!is.na(merged$SYMBOL), ]
 
 message("\nDropped ", nrow(mapped_df), " genes that did not have gene symbol from total ", nrow(merged), " genes")

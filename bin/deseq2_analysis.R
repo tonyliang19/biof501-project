@@ -54,6 +54,9 @@ output_df <- data.frame(
   ensembl_id      = rownames(res)
 )
 
+# Remove the ones that do not have log2FC
+output_df <- output_df[!is.na(output_df$log2FoldChange), ]
+
 # Modify this filename
 outfile <- "deseq2_result.csv"
 

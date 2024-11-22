@@ -28,5 +28,4 @@ process MAP_ENSEMBL_ID {
         org.Hs.eg.db: \$(Rscript -e "cat(as.character(packageVersion('org.Hs.eg.db')))")
     END_VERSIONS
     """
-    """
 }

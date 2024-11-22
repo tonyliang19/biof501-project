@@ -1,7 +1,7 @@
-process DESEQ2 {
+process ENHANCED_VOLCANO {
     debug true
 
-    container "quay.io/biocontainers/bioconductor-deseq2:1.42.0--r43hf17093f_2"
+    container "quay.io/biocontainers/bioconductor-enhancedvolcano:1.20.0--r43hdfd78af_0"
 
     publishDir (
 		path: "${params.outdir}/${task.process.tokenize(':').join('/').toLowerCase()}",
@@ -11,16 +11,15 @@ process DESEQ2 {
     )
 
     input:
-    path(fc_rds_path)
-    path(metadata_path)
+    path(mapped_id_path)
 
     output:
-    path("*.csv"),                  emit: deseq2_result
+    path("*.png"),                  emit: volcano_plot
     path("*.log"), optional: true,  emit: log
     // path("versions.yml"),           emit: versions
 
     script:
     """
-    deseq2_analysis.R ${fc_rds_path} ${metadata_path} > deseq2_analysis.log
+    plot_volcano.R ${mapped_id_path} > ${task.process.tokenize(':')[-1]}.log
     """
 }

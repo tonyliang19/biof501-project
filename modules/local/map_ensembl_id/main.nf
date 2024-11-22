@@ -1,7 +1,7 @@
-process DESEQ2 {
+process MAP_ENSEMBL_ID {
     debug true
 
-    container "quay.io/biocontainers/bioconductor-deseq2:1.42.0--r43hf17093f_2"
+    container "quay.io/biocontainers/bioconductor-org.hs.eg.db:3.18.0--r43hdfd78af_0"
 
     publishDir (
 		path: "${params.outdir}/${task.process.tokenize(':').join('/').toLowerCase()}",
@@ -11,16 +11,15 @@ process DESEQ2 {
     )
 
     input:
-    path(fc_rds_path)
-    path(metadata_path)
+    path(deseq2_result_path)
 
     output:
-    path("*.csv"),                  emit: deseq2_result
+    path("*.csv"),                  emit: mapped_id_path
     path("*.log"), optional: true,  emit: log
     // path("versions.yml"),           emit: versions
 
     script:
     """
-    deseq2_analysis.R ${fc_rds_path} ${metadata_path} > deseq2_analysis.log
+    map_ensembl_id.R ${deseq2_result_path} > ${task.process.tokenize(':')[-1]}.log
     """
 }

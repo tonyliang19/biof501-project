@@ -1,6 +1,6 @@
 process TRIMGALORE {
     debug true
-    container "'biocontainers/trim-galore:0.6.7--hdfd78af_0'"
+    container 'quay.io/biocontainers/trim-galore:0.6.7--hdfd78af_0'
 
     tag "${sample_name}"
     publishDir (

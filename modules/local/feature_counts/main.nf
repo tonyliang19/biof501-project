@@ -1,6 +1,6 @@
 process FEATURE_COUNTS {
     tag "Running feature counts"
-    container 'biocontainers/bioconductor-rsubread:2.4.0--r40h037d062_0'
+    container 'quay.io/biocontainers/bioconductor-rsubread:2.4.0--r40h037d062_0'
 
     publishDir (
 		path: "${params.outdir}/${task.process.tokenize(':').join('/').toLowerCase()}",

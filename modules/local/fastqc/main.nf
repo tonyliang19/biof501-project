@@ -1,7 +1,7 @@
 process FASTQC {
     debug false
     // Use docker container for now
-    container 'biocontainers/fastqc:0.12.1--hdfd78af_0'
+    container 'quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0'
     tag "${sample_name}"
     publishDir (
 		path: "${params.outdir}/${task.process.tokenize(':').join('/').toLowerCase()}/${sample_name}",

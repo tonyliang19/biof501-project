@@ -12,6 +12,7 @@ include { TRIMGALORE }              from "./modules/local/trimgalore"
 include { SAMTOOLS_TO_BAM }         from "./modules/local/samtools/samtools_to_bam"
 include { SAMTOOLS_SORT }           from "./modules/local/samtools/samtools_sort"
 include { FEATURE_COUNTS }          from "./modules/local/feature_counts"
+include { DESEQ2 }                  from "./modules/local/deseq2"
 include { softwareVersionsToYAML }  from "./modules/nf-core/main.nf"
 
 
@@ -60,6 +61,8 @@ workflow {
         )
         .collectFile(name: 'metadata.csv', storeDir: 'data', newLine: true, sort: false)
         .set { metadata }
+
+    metadata_ch = metadata
 
     // Download a genome if not provided from params
     if ( file("data/${params.genome.tokenize('/')[-1]}").exists() &&
@@ -114,6 +117,7 @@ workflow {
     FEATURE_COUNTS ( SAMTOOLS_SORT.out.bam.collect(), gtf )
     //
     // PROCESS: Perform downstream analysis using limma and edgeR
+    DESEQ2 ( FEATURE_COUNTS.out.feature_count, metadata )
 
 
     // =============================================================================

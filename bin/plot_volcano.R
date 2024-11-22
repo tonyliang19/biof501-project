@@ -19,13 +19,16 @@ labSize <- 6.0
 # Then plot it and save to memory
 # x and y refers to actual columns in the plot df
 
-volcano_plot <- EnhancedVolcano(plot_df, lab=final_df$SYMBOL,
-                x= "log2FoldChange",
-                y = "pvalue",
-                pCutoff = pCutOff,
-                FCcutoff = FCcutoff,
-                pointSize = pointSize ,
-                labSize = labSize)
+volcano_plot <- EnhancedVolcano(
+  plot_df, 
+  lab=plot_df$SYMBOL,
+  x= "log2FoldChange",
+  y = "pvalue",
+  pCutoff = pCutOff,
+  FCcutoff = FCcutoff,
+  pointSize = pointSize ,
+  labSize = labSize
+  )
 
 # Lastly save it using ggsave
 filename <- "volcano_plot.png"

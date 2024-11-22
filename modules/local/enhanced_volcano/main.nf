@@ -16,10 +16,17 @@ process ENHANCED_VOLCANO {
     output:
     path("*.png"),                  emit: volcano_plot
     path("*.log"), optional: true,  emit: log
-    // path("versions.yml"),           emit: versions
+    path("versions.yml"),           emit: versions
 
     script:
     """
     plot_volcano.R ${mapped_id_path} > ${task.process.tokenize(':')[-1]}.log
+    
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        R: \$(echo \$(R --version) | sed -n 's/^R version \\([0-9.]*\\).*/\\1/p')
+        EnhancedVolcano: \$(Rscript -e "cat(as.character(packageVersion('EnhancedVolcano')))")
+        ggplot2: \$(Rscript -e "cat(as.character(packageVersion('ggplot2')))")
+    END_VERSIONS
     """
 }

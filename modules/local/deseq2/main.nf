@@ -17,10 +17,16 @@ process DESEQ2 {
     output:
     path("*.csv"),                  emit: deseq2_result
     path("*.log"), optional: true,  emit: log
-    // path("versions.yml"),           emit: versions
+    path("versions.yml"),           emit: versions
 
     script:
     """
     deseq2_analysis.R ${fc_rds_path} ${metadata_path} > deseq2_analysis.log
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        R: \$(echo \$(R --version) | sed -n 's/^R version \\([0-9.]*\\).*/\\1/p')
+        DESeq2: \$(Rscript -e "cat(as.character(packageVersion('DESeq2')))")
+    END_VERSIONS
     """
 }

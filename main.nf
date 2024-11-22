@@ -13,6 +13,8 @@ include { SAMTOOLS_TO_BAM }         from "./modules/local/samtools/samtools_to_b
 include { SAMTOOLS_SORT }           from "./modules/local/samtools/samtools_sort"
 include { FEATURE_COUNTS }          from "./modules/local/feature_counts"
 include { DESEQ2 }                  from "./modules/local/deseq2"
+include { MAP_ENSEMBL_ID }          from "./modules/local/map_ensembl_id"
+include { ENHANCED_VOLCANO }        from "./modules/local/enhanced_volcano"
 include { softwareVersionsToYAML }  from "./modules/nf-core/main.nf"
 
 
@@ -116,8 +118,17 @@ workflow {
     //
     FEATURE_COUNTS ( SAMTOOLS_SORT.out.bam.collect(), gtf )
     //
-    // PROCESS: Perform downstream analysis using limma and edgeR
+    // PROCESS: Perform downstream analysis using deseq2
     DESEQ2 ( FEATURE_COUNTS.out.feature_count, metadata )
+    // 
+    // PROCESS: Map the emsembl ids of genes to its symbol
+    MAP_ENSEMBL_ID ( DESEQ2.out.deseq2_result )
+    //
+    // PROCESS: Make volcano plot of log fold changes of genes
+    //
+    ENHANCED_VOLCANO ( MAP_ENSEMBL_ID.out.mapped_id_path )
+
+
 
 
     // =============================================================================

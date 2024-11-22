@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 library(EnhancedVolcano)
-library(ggplot)
+library(ggplot2)
 
 # first parse cli, this gives as string for every arg
 # So args is just character vector

@@ -141,6 +141,9 @@ workflow {
         .mix ( SAMTOOLS_TO_BAM.out.versions )
         .mix ( SAMTOOLS_SORT.out.versions )
         .mix ( FEATURE_COUNTS.out.versions )
+        .mix ( DESEQ2.out.versions )
+        .mix ( MAP_ENSEMBL_ID.out.versions )
+        .mix ( ENHANCED_VOLCANO.out.versions )
 
     // Lastly collect all software versions and to YAML
     softwareVersionsToYAML(ch_versions)
@@ -190,7 +193,7 @@ workflow.onComplete {
 }
 
 workflow.onError = {
-println "Error: something went wrong, check the pipeline log at '.nextflow.log"
+    println "Error: something went wrong, check the pipeline log at '.nextflow.log"
 }
 
 /*

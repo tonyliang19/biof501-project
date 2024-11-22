@@ -20,7 +20,7 @@ process MAP_ENSEMBL_ID {
 
     script:
     """
-    map_ensembl_id.R ${deseq2_result_path} > ${task.process.tokenize(':')[-1]}.log
+    map_ensembl_id.R ${deseq2_result_path} > ${task.process.tokenize(':')[-1].toLowerCase()}.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -21,7 +21,7 @@ process DESEQ2 {
 
     script:
     """
-    deseq2_analysis.R ${fc_rds_path} ${metadata_path} > deseq2_analysis.log
+    deseq2_analysis.R ${fc_rds_path} ${metadata_path} > ${task.process.tokenize(':')[-1].toLowerCase()}.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

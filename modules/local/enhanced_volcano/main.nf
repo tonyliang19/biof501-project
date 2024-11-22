@@ -20,8 +20,7 @@ process ENHANCED_VOLCANO {
 
     script:
     """
-    plot_volcano.R ${mapped_id_path} > ${task.process.tokenize(':')[-1]}.log
-    
+    plot_volcano.R ${mapped_id_path} > ${task.process.tokenize(':')[-1].toLowerCase()}.log
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         R: \$(echo \$(R --version) | sed -n 's/^R version \\([0-9.]*\\).*/\\1/p')

@@ -16,12 +16,11 @@ process DESEQ2 {
 
     output:
     path("*.csv"),                  emit: deseq2_result
-    path("*.log"), optional: true,  emit: log
     path("versions.yml"),           emit: versions
 
     script:
     """
-    deseq2_analysis.R ${fc_rds_path} ${metadata_path} > ${task.process.tokenize(':')[-1].toLowerCase()}.log
+    deseq2_analysis.R ${fc_rds_path} ${metadata_path}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

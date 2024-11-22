@@ -32,4 +32,6 @@ volcano_plot <- EnhancedVolcano(
 
 # Lastly save it using ggsave
 filename <- "volcano_plot.png"
+
+message("\nSaving volcanot plot to ", filename)
 ggsave(filename=filename, plot=volcano_plot)

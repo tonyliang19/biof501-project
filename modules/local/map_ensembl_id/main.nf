@@ -15,12 +15,11 @@ process MAP_ENSEMBL_ID {
 
     output:
     path("*.csv"),                  emit: mapped_id_path
-    path("*.log"), optional: true,  emit: log
     path("versions.yml"),           emit: versions
 
     script:
     """
-    map_ensembl_id.R ${deseq2_result_path} > ${task.process.tokenize(':')[-1].toLowerCase()}.log
+    map_ensembl_id.R ${deseq2_result_path}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

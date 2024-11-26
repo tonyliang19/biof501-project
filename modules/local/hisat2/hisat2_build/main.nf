@@ -11,8 +11,8 @@ process HISAT2_BUILD {
     // This is take in as a map, able to retrieve element from map_name.key_name
     path(fa)
     output:
-    tuple val(fa.baseName), path("hisat2"), emit: index
-    path('versions.yml'),                   emit: versions
+    path("hisat2"),         emit: index
+    path('versions.yml'),   emit: versions
     script:
     // Compute first, then collect the version of binary ran
 

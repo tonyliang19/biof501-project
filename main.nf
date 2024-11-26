@@ -15,11 +15,13 @@ include { FEATURE_COUNTS }          from "./modules/local/feature_counts"
 include { DESEQ2 }                  from "./modules/local/deseq2"
 include { MAP_ENSEMBL_ID }          from "./modules/local/map_ensembl_id"
 include { ENHANCED_VOLCANO }        from "./modules/local/enhanced_volcano"
-include { softwareVersionsToYAML }  from "./modules/nf-core/main.nf"
+include { softwareVersionsToYAML; 
+        print_start_params; 
+        print_finish_summary }      from "./modules/nf-core/main.nf"
 
 
 workflow {
-    log.info "Starting the DGE Analysis workflow..."
+    print_start_params()
     /*
         Should take in a samplesheet.csv where each entry is geo accession code
         then have process to download fastq file from the accesion code
@@ -168,33 +170,17 @@ workflow.onComplete {
     jsonStr = JsonOutput.toJson(params)
     file("${params.outdir}/params.json").text = JsonOutput.prettyPrint(jsonStr)
     */
-    println ( workflow.success ? 
-    """
-    ===============================================================================
-    Pipeline execution summary
-    -------------------------------------------------------------------------------
-
-    Run as      : ${workflow.commandLine}
-    Started at  : ${workflow.start}
-    Completed at: ${workflow.complete}
-    Duration    : ${workflow.duration}
-    Success     : ${workflow.success}
-    workDir     : ${workflow.workDir}
-    Config files: ${workflow.configFiles}
-    exit status : ${workflow.exitStatus}
-
-    --------------------------------------------------------------------------------
-    ================================================================================
-    """.stripIndent() : """
-    Failed: ${workflow.errorReport}
-    exit status : ${workflow.exitStatus}
-    """.stripIndent()
-    )
+    print_finish_summary()
 }
 
 workflow.onError = {
     println "Error: something went wrong, check the pipeline log at '.nextflow.log"
 }
+
+// Use this fun to log the input parameters and other metadata information
+// of the pipeline upon starting
+
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

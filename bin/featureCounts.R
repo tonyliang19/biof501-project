@@ -23,4 +23,11 @@ colnames(fc$counts) <- gsub(pattern, "", colnames(fc$counts))
 file <- "feature_counts.rds"
 saveRDS(fc, file = file)
 
+# And print the first 6 rows of the counts data to see matching and targets
+cat("\nTargets are: ", fc$targets)
+
+# And return the head of counts object in log
+cat("\n")
+print(head(fc$counts))
+
 

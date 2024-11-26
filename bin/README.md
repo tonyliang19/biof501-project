@@ -1,6 +1,6 @@
 # Executable Binary Scripts
 
-This directory contains R or Python scripts used in [modules](../modules/README.md) processes, such the process meta definition (input and output) and actual analysis/computation is separated.
+This directory contains R scripts used in [modules](../modules/README.md) processes, such the process meta definition (input and output) and actual analysis/computation is separated.
 
 
 Each script in this directory should follow this format:

@@ -80,19 +80,18 @@ This structure is adapted from **nf-core** standard worfklow from the [rnaseq](h
     - [`test.config`](./conf/test.config): This is configuration designed to be run on small dataset (i.e. our sample data this case), with limited resource settings
 
 
-
-
-
 ## Project Outline
 
 
 **Question**: Identify genes from 10 genes of interest that are differential expressed between different conditions like disease vs control
 
-**Data input**: Fastq file of RNA-seq data, single or paired allowed
+**Data input**: Fastq file of RNA-seq data, paired only
 
 **Output**: Summary report that contains visualization of results and patterns observed from differential expression analysis
 
 ### Workflow stages/steps
+
+> TODO: update this part
 
 Take  data from fastq format that has disease and control and perform the following:
 1. Quality check and filtering
@@ -102,17 +101,6 @@ Take  data from fastq format that has disease and control and perform the follow
    - Gene expression quantification to generate count matrix
 6. Perform differential expression analysis in R using **DESeq2**
 7. Visualization and summary report in R using **pheatmap**
-
-
-## Sample data
-
-Using the [GSE272659 study](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE272659) and looking its 4 samples only:
-
-1. [GSM8408768 NT-Ctrl-1](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM8408768), which corresponds to run [SRR29891678](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browser&acc=SRR29891678&display=metadata)
-2. [GSM8408769 NT-Ctrl-2](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM8408769), which corresponds to run [SRR29891677](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browser&acc=SRR29891677&display=metadata)
-3. [GSM8408771 NT-Doxo-1](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM8408771), which corresponds to run [SRR29891675](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browser&acc=SRR29891675&display=metadata)
-4. [GSM8408772 NT-Doxo-2](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM8408772), which corresponds to run [SRR29891674](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browser&acc=SRR29891674&display=metadata)
-
 
 
 ## Setup
@@ -134,30 +122,24 @@ For a list of software images used in this pipeline see the configuration file [
 
 ### Preparing Input
 
-> [!NOTE]
-> This instruction is yet not completed, still under construction
-
 First, prepare a samplesheet with your input data that looks as follows:
 
 **data/samplesheet.csv**:
 
 ```csv
-sample_name,fastq1,fastq2
-control_rep1,data/SRR29891678_sample_1.fastq.gz,data/SRR29891678_sample_2.fastq.gz
-control_rep2,data/SRR29891677_sample_1.fastq.gz,data/SRR29891677_sample_2.fastq.gz
-treatment_rep1,data/SRR29891675_sample_1.fastq.gz,data/SRR29891675_sample_2.fastq.gz
-treatment_rep2,data/SRR29891674_sample_1.fastq.gz,data/SRR29891674_sample_2.fastq.gz
+sample_name,condition,rep,fastq1,fastq2
+SRR29891678,control,rep1,data/SRR29891678_sample_1.fastq.gz,data/SRR29891678_sample_2.fastq.gz
+SRR29891677,control,rep2,data/SRR29891677_sample_1.fastq.gz,data/SRR29891677_sample_2.fastq.gz
+SRR29891675,treatment,rep1,data/SRR29891675_sample_1.fastq.gz,data/SRR29891675_sample_2.fastq.gz
+SRR29891674,treatment,rep2,data/SRR29891674_sample_1.fastq.gz,data/SRR29891674_sample_2.fastq.gz
 ```
 
-The `sample_name` here ilustrates condition and replicate number together
+The `sample_name` here represents sequence read archive (SRA) accession code, in this case, `SRR*` are sequencing runs from NCBI's database. And, this samplesheet should also contain information like is the condition that sample represents (one of control or treatment), and its biological replicate number
+with prefix `rep`. Lastly, it should have two columns indicating path to the `fastq.gz` of both read1 and read2, as the pipeline required paired-end sequencing data.
 
-
-Each row represents a pair of fastq files (paired end) corresponding to some condition + replicate.
-
-TODO: this sample data section need to be rewritten, since the metadata part can be inside the samplesheet
+For more information of how this samplesheet was constructed, see its [README here](data/README.md).
 
 ### Running Instruction
-
 
 First, clone the this github repository and change the working directory to the clone repo using:
 

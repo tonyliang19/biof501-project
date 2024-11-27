@@ -22,6 +22,9 @@ The following ilustrates the tree structure of this repository, those that ends 
 
 This structure is adapted from **nf-core** standard worfklow from the [rnaseq](https://github.com/nf-core/rnaseq/tree/master) repository.
 
+
+<details>
+  <summary>See the repository file structure (NEED TO UPDATE LATER) </summary>
 ```bash
 ./
 ├── Makefile
@@ -63,6 +66,8 @@ This structure is adapted from **nf-core** standard worfklow from the [rnaseq](h
 ├── nextflow.config
 └── run_nxf.sh*
 ```
+
+</details>
 
 ### Directories
 

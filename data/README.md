@@ -103,5 +103,5 @@ data/
 ├── SRR29891678_sample_1.fastq.gz
 ├── SRR29891678_sample_2.fastq.gz
 ├── metadata.csv
-└── samplesheet.
+└── samplesheet.csv
 ```

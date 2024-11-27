@@ -18,9 +18,9 @@ fc <- readRDS(rds_path)
 raw_counts <- fc$counts
 # Handle metadata here
 metadata_df <- read.csv(metadata_path)
-# Rename the run_name to sample id and add it as rownames
-colnames(metadata_df)[colnames(metadata_df) == "run_name"] <- "sample_id"
-rownames(metadata_df) <- metadata_df$sample_id
+# Assign sample identifier as rownames
+sample_identifier <- "sample_name"
+rownames(metadata_df) <- metadata_df[[sample_identifier]]
 
 # Then make sure the condition of metadata is factor
 metadata_df$condition <- as.factor(metadata_df$condition)

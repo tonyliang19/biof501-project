@@ -37,10 +37,17 @@ MORE FORMAL INTRODUCTION ON THE PROBLEM HERE
 ### Workflow Overview
 
 ```mermaid
----
-config:
-  theme: neo
----
+%%{
+  init: {
+    'theme': 'base',
+    'themeVariables': {
+      'primaryColor': '#93D0FF',
+      'primaryTextColor': '#000'
+    }
+  }
+}%%
+
+
 flowchart TB
  subgraph qc["Quality Control"]
         TRIMGALORE["TRIMGALORE"]

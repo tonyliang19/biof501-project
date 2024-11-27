@@ -1,0 +1,5 @@
+sample_name,condition,rep
+SRR29891678,control,rep1
+SRR29891677,control,rep2
+SRR29891675,treatment,rep1
+SRR29891674,treatment,rep2

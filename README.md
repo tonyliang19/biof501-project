@@ -221,9 +221,6 @@ Pipeline tools
 
   > Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
 
-- [featureCounts](https://pubmed.ncbi.nlm.nih.gov/24227677/)
-
-  > Liao Y, Smyth GK, Shi W. featureCounts: an efficient general purpose program for assigning sequence reads to genomic features. Bioinformatics. 2014 Apr 1;30(7):923-30. doi: 10.1093/bioinformatics/btt656. Epub 2013 Nov 13. PubMed PMID: 24227677.
 
 - [HISAT2](https://pubmed.ncbi.nlm.nih.gov/31375807/)
 
@@ -237,7 +234,7 @@ Pipeline tools
 
 - [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)
 
-    > Krueger, Felix. "Trim Galore!: A wrapper around Cutadapt and FastQC to consistently apply adapter and quality trimming to FastQ files, with extra functionality for RRBS data." Babraham Institute (2015).
+  > Krueger, Felix. "Trim Galore!: A wrapper around Cutadapt and FastQC to consistently apply adapter and quality trimming to FastQ files, with extra functionality for RRBS data." Babraham Institute (2015).
 
 
 ### R packages
@@ -250,20 +247,27 @@ Pipeline tools
 
   > Love MI, Huber W, Anders S. Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biol. 2014;15(12):550. PubMed PMID: 25516281; PubMed Central PMCID: PMC4302049.
 
+- [EnhancedVolcano](https://doi.org/10.18129/B9.bioc.EnhancedVolcano)
+
+  > Blighe K, Rana S, Lewis M (2023). _EnhancedVolcano: Publication-ready
+  volcano plots with enhanced colouring and labeling_.
+  doi:10.18129/B9.bioc.EnhancedVolcano
+  <https://doi.org/10.18129/B9.bioc.EnhancedVolcano>, R package version
+  1.20.0, <https://bioconductor.org/packages/EnhancedVolcano>.
 
 - [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html)
 
   > H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
 
-
-- [pheatmap](https://CRAN.R-project.org/package=pheatmap)
-
-  > Raivo Kolde (2018). pheatmap: Pretty Heatmaps.
-
 - [RColorBrewer](https://CRAN.R-project.org/package=RColorBrewer)
 
   > Erich Neuwirth (2014). RColorBrewer: ColorBrewer Palettes.
 
+- [Rsubread](https://bioconductor.org/packages/release/bioc/html/Rsubread.html)
+
+  > Liao Y, Smyth GK and Shi W (2019). The R package Rsubread is easier,
+  faster, cheaper and better for alignment and quantification of RNA
+  sequencing reads. Nucleic Acids Research 47(8), e47.
 
 ### Software packaging/containerisation tools
 

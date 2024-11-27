@@ -9,12 +9,94 @@ Author: Tony Liang
 **Table of Contents**:
 
 1. [Project Outline](#project-outline)
+1. [Workflow Overview]
 1. [Repository Structure](#directory-contents)
 1. [Setup](#setup)
 1. [Preparing Input](#preparing-input)
 1. [Running Instructions](#running-instruction)
-1. [Pipeline Output](#pipeline-output)
+1. [Expected Pipeline Output](#pipeline-output)
 1. [Reference](#reference)
+
+## Project Outline
+
+### Introduction
+
+MORE FORMAL INTRODUCTION ON THE PROBLEM HERE
+
+
+### 
+
+
+<!--->
+**Question**: Identify genes from 10 genes of interest that are differential expressed between different conditions like disease vs control
+
+**Data input**: Fastq file of RNA-seq data, paired only
+
+**Output**: Summary report that contains visualization of results and patterns observed from differential expression analysis
+---->
+### Workflow Overview
+
+```mermaid
+---
+config:
+  theme: neo
+---
+flowchart TB
+ subgraph qc["Quality Control"]
+        TRIMGALORE["TRIMGALORE"]
+        FASTQC["FASTQC"]
+  end
+ subgraph upstream["Upstream"]
+    direction TB
+        qc
+        GENOME(["genome"])
+        DOWNLOAD_REFERENCE["DOWNLOAD_REFERENCE"]
+        GENOME_ANNOTATION(["genome annotation"])
+        HISAT2_BUILD["HISAT2_BUILD"]
+        FEATURE_COUNTS["FEATURE_COUNTS"]
+        HISAT2_ALIGN["HISAT2_ALIGN"]
+        SAMTOOLS_TO_BAM["SAMTOOLS_TO_BAM"]
+        SAMTOOLS_SORT["SAMTOOLS_SORT"]
+  end
+ subgraph downstream["Downstream"]
+    direction LR
+        MAP_ENSEMBL_ID["MAP_ENSEMBL_ID"]
+        DESEQ2["DESEQ2"]
+        ENHANCED_VOLCANO["ENHANCED_VOLCANO"]
+  end
+    FASTQC --> TRIMGALORE
+    DOWNLOAD_REFERENCE --> GENOME & GENOME_ANNOTATION
+    GENOME --> HISAT2_BUILD
+    GENOME_ANNOTATION --> FEATURE_COUNTS
+    HISAT2_BUILD --> HISAT2_ALIGN
+    HISAT2_ALIGN --> SAMTOOLS_TO_BAM
+    SAMTOOLS_TO_BAM --> SAMTOOLS_SORT
+    SAMTOOLS_SORT --> FEATURE_COUNTS
+    DESEQ2 --> MAP_ENSEMBL_ID
+    MAP_ENSEMBL_ID --> ENHANCED_VOLCANO
+    reads(["Reads"]) --> qc
+    TRIMGALORE --> HISAT2_ALIGN
+    FEATURE_COUNTS --> downstream
+    %% style qc fill:#C8E6C9
+    %% style DOWNLOAD_REFERENCE fill:#FFFFFF
+    %% style downstream fill:#FFF9C4
+    %% style upstream fill:#BBDEFB
+
+```
+
+
+
+> TODO: update this part
+
+Take  data from fastq format that has disease and control and perform the following:
+1. Quality check and filtering
+    -  Apply initial QC using **fastqc**
+    - Trim reads **cutadapt** or ***trimmmomatic**
+3. Read alignment reference genome (containing 10 genes of interest only) **STAR** or **hisat2**
+   - Gene expression quantification to generate count matrix
+6. Perform differential expression analysis in R using **DESeq2**
+7. Visualization and summary report in R using **pheatmap**
+
 
 ## Repository Structure
 
@@ -84,28 +166,6 @@ This structure is adapted from **nf-core** standard worfklow from the [rnaseq](h
     - [`base.config`](./conf/base.config): This is basic configuration that declares resource usages, and it is intended to be overridden by other profiles
     - [`test.config`](./conf/test.config): This is configuration designed to be run on small dataset (i.e. our sample data this case), with limited resource settings
 
-
-## Project Outline
-
-
-**Question**: Identify genes from 10 genes of interest that are differential expressed between different conditions like disease vs control
-
-**Data input**: Fastq file of RNA-seq data, paired only
-
-**Output**: Summary report that contains visualization of results and patterns observed from differential expression analysis
-
-### Workflow stages/steps
-
-> TODO: update this part
-
-Take  data from fastq format that has disease and control and perform the following:
-1. Quality check and filtering
-    -  Apply initial QC using **fastqc**
-    - Trim reads **cutadapt** or ***trimmmomatic**
-3. Read alignment reference genome (containing 10 genes of interest only) **STAR** or **hisat2**
-   - Gene expression quantification to generate count matrix
-6. Perform differential expression analysis in R using **DESeq2**
-7. Visualization and summary report in R using **pheatmap**
 
 
 ## Setup

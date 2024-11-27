@@ -39,23 +39,19 @@ workflow {
         Channel
         .fromPath( params.samplesheet )
         .splitCsv( header: true )
-        // This gives [ sample_name, [ name, condition ], [ reads ] ]
+        // This gives [ sample_name, condition, rep, [ read1, read2 ] ]
         .map { row ->
-            // Splits sample name from condition_rep
-            def split_name = row.sample_name.split("_")
-            // Get run name from the fastq file
-            def run_name = file(row.fastq1.split("_1.fastq.gz")[0]).getSimpleName()
-            [run_name , split_name[0], split_name[1], [ file(row.fastq1), file(row.fastq2) ] ]
+            [ row.sample_name , row.condition, row.rep, [ file(row.fastq1), file(row.fastq2) ] ]
         }
-        .multiMap { run_name, condition, rep, reads ->
-            record: [ run_name , reads ] 
-            meta: [ run_name, condition, rep ] 
+        .multiMap { sample_name, condition, rep, reads ->
+            record: [ sample_name , reads ] 
+            meta: [ sample_name, condition, rep ] 
         }
         .set { ch_input }
     
     // Then extract the metadata to save it as csv for later use
     // Need extra row as header of columns
-    header_row = Channel.fromList(['run_name,condition,rep'])
+    header_row = Channel.fromList(['sample_name,condition,rep'])
     // Then concat it with the relevant metadata
     header_row
         .concat(  

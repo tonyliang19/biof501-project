@@ -28,4 +28,4 @@ clean:
 	@rm -rf work/
 	@rm -f .nextflow.log*
 	@rm -rf .nextflow/
-	@rm -rf results/
+	@find results -mindepth 1 ! -name README.md -delete

@@ -9,7 +9,7 @@ Author: Tony Liang
 **Table of Contents**:
 
 1. [Project Outline](#project-outline)
-1. [Workflow Overview]
+1. [Workflow Overview](#workflow-overview)
 1. [Repository Structure](#directory-contents)
 1. [Setup](#setup)
 1. [Preparing Input](#preparing-input)

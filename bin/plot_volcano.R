@@ -24,15 +24,11 @@ significant <- abs(plot_df$log2FoldChange) > FCcutoff & plot_df$pvalue < pCutOff
 num_significant <- sum(significant)
 
 # Adjust thresholds if there isnt too many significant points
-if (num_significant < 5) {
+if (num_significant < floor(nrow(plot_df) / 2)) {
   cat("Few significant points found. Relax thresholds.\n")
   pCutOff <- 0.2  # Relax p-value threshold
   FCcutoff <- FCcutoff - 0.4 # Relax fold-change threshold
-} else if (num_significant > 50) {
-  cat("Many significant points found. Tighten thresholds.\n")
-  pCutOff <- 0.01  # Tighten p-value threshold
-  FCcutoff <- FCcutoff + 0.4  # Tighten fold-change threshold
-}
+} 
 
 # Graphic parameters
 pointSize <- 3.0

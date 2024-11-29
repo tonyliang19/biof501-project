@@ -71,6 +71,8 @@ workflow {
         // When both the genome and its annotation exists in local then used them directly
         genome = file("data/${params.genome.tokenize('/')[-1]}")
         gtf = file("data/${params.genome_annotation.tokenize('/')[-1]}")
+        // println "Landed on found branch NO DOWNLOAD"
+        // genome_name = genome.getBaseName()
     } else {
         // Otherwise download to disk
         ch_refs = Channel.fromList([params.genome, params.genome_annotation])
@@ -84,8 +86,14 @@ workflow {
                             gtf: it.toString().contains('gtf.gz')
                         }
                         .set { refs }
+
+        // println "Landed on the not found branch, YES DOWNLOAD"
+        // refs.genome.set { genome }
+        // refs.gtf.set { gtf }
+        // refs.genome.getBaseName().set { genome_name }
         genome = refs.genome
         gtf = refs.gtf
+        
     }
     //
     // PROCESS: Execute initial quality control on fastq data
@@ -102,7 +110,7 @@ workflow {
     // PROCESS: Align the trimmed reads to reference fasta (genome)
     //
     // [ sample_name, [read1, read2] ], [ hisat2 ], fa_name
-    HISAT2_ALIGN ( TRIMGALORE.out.reads, HISAT2_BUILD.out.index, genome.baseName )
+    HISAT2_ALIGN ( TRIMGALORE.out.reads, HISAT2_BUILD.out.index , HISAT2_BUILD.out.fa_name )
     //
     // PROCESS: Convert the the aligned sam files to bam
     //

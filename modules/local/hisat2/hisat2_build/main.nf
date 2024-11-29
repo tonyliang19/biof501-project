@@ -13,6 +13,7 @@ process HISAT2_BUILD {
     output:
     path("hisat2"),         emit: index
     path('versions.yml'),   emit: versions
+    val(fa.baseName),      emit: fa_name
     script:
     // Compute first, then collect the version of binary ran
 

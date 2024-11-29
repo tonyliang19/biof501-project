@@ -83,7 +83,8 @@ flowchart TB
     MAP_ENSEMBL_ID --> ENHANCED_VOLCANO
     reads(["Reads"]) --> qc
     TRIMGALORE --> HISAT2_ALIGN
-    FEATURE_COUNTS --> downstream
+    FEATURE_COUNTS --> count(["Count matrix])
+    count --> downstream
 
 
 %% Some other custom styling

@@ -22,16 +22,6 @@ include { softwareVersionsToYAML;
 
 workflow {
     print_start_params()
-    /*
-        Should take in a samplesheet.csv where each entry is geo accession code
-        then have process to download fastq file from the accesion code
-
-        Say format is:
-
-        accession_code,some_other_column,...
-        12345678,some_other_value,...
-    */
-
     // Initialize version file to store
     ch_versions = Channel.empty()
 
@@ -62,8 +52,6 @@ workflow {
         .collectFile(name: 'metadata.csv', storeDir: 'data', newLine: true, sort: false)
         .set { metadata }
 
-    metadata_ch = metadata
-
     // Download a genome if not provided from params
     if ( file("data/${params.genome.tokenize('/')[-1]}").exists() &&
         file("data/${params.genome_annotation.tokenize('/')[-1]}").exists() ) {
@@ -71,8 +59,8 @@ workflow {
         // When both the genome and its annotation exists in local then used them directly
         genome = file("data/${params.genome.tokenize('/')[-1]}")
         gtf = file("data/${params.genome_annotation.tokenize('/')[-1]}")
-        // println "Landed on found branch NO DOWNLOAD"
-        // genome_name = genome.getBaseName()
+
+
     } else {
         // Otherwise download to disk
         ch_refs = Channel.fromList([params.genome, params.genome_annotation])
@@ -86,13 +74,9 @@ workflow {
                             gtf: it.toString().contains('gtf.gz')
                         }
                         .set { refs }
-
-        // println "Landed on the not found branch, YES DOWNLOAD"
-        // refs.genome.set { genome }
-        // refs.gtf.set { gtf }
-        // refs.genome.getBaseName().set { genome_name }
-        genome = refs.genome
-        gtf = refs.gtf
+        // Get the only item (first) to make it value channel to repeatedly use
+        genome = refs.genome.first()
+        gtf = refs.gtf.first()
         
     }
     //
@@ -109,12 +93,9 @@ workflow {
     //
     // PROCESS: Align the trimmed reads to reference fasta (genome)
     //
-    // [ sample_name, [read1, read2] ], fa_name, hisat2_index
-    HISAT2_ALIGN ( 
-        TRIMGALORE.out.reads, 
-        HISAT2_BUILD.out.fa_name,
-        HISAT2_BUILD.out.index
-    )
+    // [ [ sample_name, [read1, read2] ], [fa_name, hisat2_index] ]
+    HISAT2_ALIGN ( TRIMGALORE.out.reads, HISAT2_BUILD.out.index )
+
     //
     // PROCESS: Convert the the aligned sam files to bam
     //
@@ -137,9 +118,6 @@ workflow {
     // PROCESS: Make volcano plot of log fold changes of genes
     //
     ENHANCED_VOLCANO ( MAP_ENSEMBL_ID.out.mapped_id_path )
-
-
-
 
     // =============================================================================
     // Collect versions from modules

@@ -10,8 +10,9 @@ process HISAT2_ALIGN {
     input:
     // This is take in as a map, able to retrieve element from map_name.key_name
     tuple val(sample_name), path(reads)
-    path(index)
-    each val(fa_name)
+    val(fa_name)
+    each index // This make sures it duplicates index to use, otherwise only run ones
+
     output:
     tuple val(sample_name), path("${sample_name}.sam"), emit: sam
     path("*.log"),                                      emit: log

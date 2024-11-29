@@ -10,10 +10,12 @@ process HISAT2_BUILD {
     input:
     // This is take in as a map, able to retrieve element from map_name.key_name
     path(fa)
+    
     output:
     path("hisat2"),         emit: index
     path('versions.yml'),   emit: versions
     val(fa.baseName),       emit: fa_name
+    
     script:
     // Compute first, then collect the version of binary ran
 

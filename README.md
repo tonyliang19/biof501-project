@@ -42,12 +42,12 @@ MORE FORMAL INTRODUCTION ON THE PROBLEM HERE
     'theme': 'base',
     'themeVariables': {
       'primaryColor': '#93D0FF',
-      'primaryTextColor': '#000'
+      'primaryTextColor': '#000',
+      'fontSize': '14px',
+      'fontFamily': 'Arial'
     }
   }
 }%%
-
-
 flowchart TB
  subgraph qc["Quality Control"]
         TRIMGALORE["TRIMGALORE"]
@@ -84,10 +84,25 @@ flowchart TB
     reads(["Reads"]) --> qc
     TRIMGALORE --> HISAT2_ALIGN
     FEATURE_COUNTS --> downstream
-    %% style qc fill:#C8E6C9
-    %% style DOWNLOAD_REFERENCE fill:#FFFFFF
-    %% style downstream fill:#FFF9C4
-    %% style upstream fill:#BBDEFB
+
+
+%% Some other custom styling
+
+%% Font sizes
+
+style downstream font-size:18px,stroke:#000,stroke-width:3px
+style upstream font-size:18px,stroke:#000,stroke-width:3px
+style qc font-size:18px,stroke:#000,stroke-width:3px
+
+%% Colorings
+style TRIMGALORE fill:#ADD8E6,stroke:#000,stroke-width:1px
+style FASTQC fill:#ADD8E6,stroke:#000,stroke-width:1px
+style FEATURE_COUNTS fill:#90EE90,stroke:#000,stroke-width:2px
+style DESEQ2 fill:#FFD700,stroke:#000,stroke-width:2px
+style MAP_ENSEMBL_ID fill:#FFD700,stroke:#000,stroke-width:2px
+style ENHANCED_VOLCANO fill:#FFD700,stroke:#000,stroke-width:2px
+%% This the link for line from fastqc to trimgalor
+linkStyle 0 stroke:#FF4500,stroke-width:2px
 
 ```
 

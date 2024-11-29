@@ -129,6 +129,7 @@ This structure is adapted from **nf-core** standard worfklow from the [rnaseq](h
 
 <details>
   <summary>See the repository file structure (NEED TO UPDATE LATER) </summary>
+
 ```bash
 ./
 ├── Makefile

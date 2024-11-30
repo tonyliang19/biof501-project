@@ -37,60 +37,59 @@ MORE FORMAL INTRODUCTION ON THE PROBLEM HERE
 ### Workflow Overview
 
 ```mermaid
-%%{
-  init: {
-    'theme': 'base',
-    'th	emeVariables': {
-      'primaryColor': '#93D0FF',
-      'primaryTextColor': '#000',
-      'fontSize': '18px'
-    }
-  }
-}%%
+    %%{
+    init: {
+        'themeVariables': {
+          'primaryColor': '#93D0FF',
+          'primaryTextColor': '#000',
+          'fontSize': '20px',
+          'fontFamily': 'Arial'
+        }
+      }
+    }%%
+    flowchart TB
+    subgraph qc["Quality Control"]
+            TRIMGALORE["TRIMGALORE"]
+            FASTQC["FASTQC"]
+    end
+    subgraph upstream["Upstream"]
+        direction TB
+            qc
+            GENOME(["genome"])
+            DOWNLOAD_REFERENCE["DOWNLOAD_REFERENCE"]
+            GENOME_ANNOTATION(["genome annotation"])
+            HISAT2_BUILD["HISAT2_BUILD"]
+            FEATURE_COUNTS["FEATURE_COUNTS"]
+            HISAT2_ALIGN["HISAT2_ALIGN"]
+            SAMTOOLS_TO_BAM["SAMTOOLS_TO_BAM"]
+            SAMTOOLS_SORT["SAMTOOLS_SORT"]
+    end
+    subgraph downstream["Downstream"]
+        direction LR
+            MAP_ENSEMBL_ID["MAP_ENSEMBL_ID"]
+            DESEQ2["DESEQ2"]
+            ENHANCED_VOLCANO["ENHANCED_VOLCANO"]
+    end
+        FASTQC --> TRIMGALORE
+        DOWNLOAD_REFERENCE --> GENOME & GENOME_ANNOTATION
+        GENOME --> HISAT2_BUILD
+        GENOME_ANNOTATION --> FEATURE_COUNTS
+        HISAT2_BUILD --> HISAT2_ALIGN
+        HISAT2_ALIGN --> SAMTOOLS_TO_BAM
+        SAMTOOLS_TO_BAM --> SAMTOOLS_SORT
+        SAMTOOLS_SORT --> FEATURE_COUNTS
+        DESEQ2 --> MAP_ENSEMBL_ID
+        MAP_ENSEMBL_ID --> ENHANCED_VOLCANO
+        reads(["Reads"]) --> qc
+        TRIMGALORE --> HISAT2_ALIGN
+        FEATURE_COUNTS --> count(["Count Matrix"])
+        count --> downstream
 
-
-flowchart TB
- subgraph qc["Quality Control"]
-        TRIMGALORE["TRIMGALORE"]
-        FASTQC["FASTQC"]
-  end
- subgraph upstream["Upstream"]
-    direction TB
-        qc
-        GENOME(["genome"])
-        DOWNLOAD_REFERENCE["DOWNLOAD_REFERENCE"]
-        GENOME_ANNOTATION(["genome annotation"])
-        HISAT2_BUILD["HISAT2_BUILD"]
-        FEATURE_COUNTS["FEATURE_COUNTS"]
-        HISAT2_ALIGN["HISAT2_ALIGN"]
-        SAMTOOLS_TO_BAM["SAMTOOLS_TO_BAM"]
-        SAMTOOLS_SORT["SAMTOOLS_SORT"]
-  end
- subgraph downstream["Downstream"]
-    direction LR
-        MAP_ENSEMBL_ID["MAP_ENSEMBL_ID"]
-        DESEQ2["DESEQ2"]
-        ENHANCED_VOLCANO["ENHANCED_VOLCANO"]
-  end
-    FASTQC --> TRIMGALORE
-    DOWNLOAD_REFERENCE --> GENOME & GENOME_ANNOTATION
-    GENOME --> HISAT2_BUILD
-    GENOME_ANNOTATION --> FEATURE_COUNTS
-    HISAT2_BUILD --> HISAT2_ALIGN
-    HISAT2_ALIGN --> SAMTOOLS_TO_BAM
-    SAMTOOLS_TO_BAM --> SAMTOOLS_SORT
-    SAMTOOLS_SORT --> FEATURE_COUNTS
-    DESEQ2 --> MAP_ENSEMBL_ID
-    MAP_ENSEMBL_ID --> ENHANCED_VOLCANO
-    reads(["Reads"]) --> qc
-    TRIMGALORE --> HISAT2_ALIGN
-    
-    FEATURE_COUNTS --> count(["Count Matrix"])
-    count --> downstream
 
     %% Some other custom styling
 
     %% Font sizes
+
     style downstream font-size:18px,stroke:#000,stroke-width:3px
     style upstream font-size:18px,stroke:#000,stroke-width:3px
     style qc font-size:18px,stroke:#000,stroke-width:3px
@@ -103,7 +102,8 @@ flowchart TB
     style MAP_ENSEMBL_ID fill:#FFD700,stroke:#000,stroke-width:2px
     style ENHANCED_VOLCANO fill:#FFD700,stroke:#000,stroke-width:2px
     %% This the link for line from fastqc to trimgalor
-    %% linkStyle 0 stroke:#FF4500,stroke-width:2px
+    linkStyle 0 stroke:#FF4500,stroke-width:2px
+
 
 ```
 

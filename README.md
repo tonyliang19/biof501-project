@@ -40,9 +40,10 @@ MORE FORMAL INTRODUCTION ON THE PROBLEM HERE
 %%{
   init: {
     'theme': 'base',
-    'themeVariables': {
+    'th	emeVariables': {
       'primaryColor': '#93D0FF',
-      'primaryTextColor': '#000'
+      'primaryTextColor': '#000',
+      'fontSize': '18px'
     }
   }
 }%%
@@ -102,7 +103,7 @@ flowchart TB
     style MAP_ENSEMBL_ID fill:#FFD700,stroke:#000,stroke-width:2px
     style ENHANCED_VOLCANO fill:#FFD700,stroke:#000,stroke-width:2px
     %% This the link for line from fastqc to trimgalor
-    linkStyle 0 stroke:#FF4500,stroke-width:2px
+    %% linkStyle 0 stroke:#FF4500,stroke-width:2px
 
 ```
 

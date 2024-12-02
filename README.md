@@ -24,16 +24,6 @@ Technological advances have enabled easy access to high-throughput transcriptome
 Here, we introduce a Nextflow pipeline **DGE-analysis** that takes in paired-end RNA-sequencing data in fastq format, transforming it all the way to gene counts matrix across different conditions from biological sample, and presenting nice volcano plot [3] of DEGs. 
 
 
-### 
-
-
-<!--->
-**Question**: Identify genes from 10 genes of interest that are differential expressed between different conditions like disease vs control
-
-**Data input**: Fastq file of RNA-seq data, paired only
-
-**Output**: Summary report that contains visualization of results and patterns observed from differential expression analysis
----->
 ### Workflow Overview
 
 ```mermaid

@@ -19,11 +19,7 @@ Author: Tony Liang
 
 ### Introduction
 
-Technological advances have enabled easy access to high-throughput transcriptome seqeuncing (RNA-Seq). It provides far high coverage and greater resolution of dynamic nature of transcriptome compared to previous microarray-based methods like Sanger sequencing [1]. 
-
-RNA-Seq allows us to compare specific conditions and understanding phenotypic variation through quantifying differentially expressed genes (DEGs) [2]. However, this process of from sequencing data to counts of DEGS could vary a lot depending input sequence data type, protocol or library strategy. 
-
-Due to these source of variations, there are many existing tools that identify DEGs from RNA-seq data, but not standardized as a modular, reproducible workflow. This modular feature allows simple replacement of tool to examine effects like alignment strategy, mapping reads, etc.
+Technological advances have enabled easy access to high-throughput transcriptome seqeuncing (RNA-Seq). It provides far high coverage and greater resolution of dynamic nature of transcriptome compared to previous microarray-based methods like Sanger sequencing [1]. RNA-Seq allows us to compare specific conditions and understanding phenotypic variation through quantifying differentially expressed genes (DEGs) [2]. However, this process of from sequencing data to counts of DEGS could vary a lot depending input sequence data type, protocol or library strategy.  Due to these source of variations, there are many existing tools that identify DEGs from RNA-seq data, but not standardized as a modular, reproducible workflow. This modular feature allows simple replacement of tool to examine effects like alignment strategy, mapping reads, etc.
 
 Here, we introduce a Nextflow pipeline **DGE-analysis** that takes in paired-end RNA-sequencing data in fastq format, transforming it all the way to gene counts matrix across different conditions from biological sample, and presenting nice volcano plot [3] of DEGs. 
 

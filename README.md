@@ -106,19 +106,16 @@ MORE FORMAL INTRODUCTION ON THE PROBLEM HERE
 
 
 ```
+Above is the workflow steps overview of how from raw fastq files, we get to count matrix through list of bioinformatics tools (see [reference](#reference)) with these steps:
 
+1. Given a pair of fastq reads of sequencing files, check their qualities through **FASTQC** and remove low quality reads with **TRIMGALORE**
+2. At the same time, reference genome and its annotation are downloaded from the internet, the `genome` is a parameter of the pipeline, which can be any other url pointing to a homo-sapiens genome.
+3. The genome index is built using **HISAT2** to allow for quicker location of query sequences in reference genome
+4. Then aligned trimmed reads from 1. and the built genome index from 3. using **HISAT2**. This step is separated from 3. to decouple the indexing and alignment logic.
+5. Then convert the aligned sequence alignment map (SAM) from 4. to binary alignment map (BAM) using **SAMTOOLS**, to have a compressed binary representation of 4.
+6. Then sort 5. BAM using SAMTOOLS, again for the sake of decoupling logic of conversion of file formats and sorting
+7. 
 
-
-> TODO: update this part
-
-Take  data from fastq format that has disease and control and perform the following:
-1. Quality check and filtering
-    -  Apply initial QC using **fastqc**
-    - Trim reads **cutadapt** or ***trimmmomatic**
-3. Read alignment reference genome (containing 10 genes of interest only) **STAR** or **hisat2**
-   - Gene expression quantification to generate count matrix
-6. Perform differential expression analysis in R using **DESeq2**
-7. Visualization and summary report in R using **pheatmap**
 
 
 ## Repository Structure

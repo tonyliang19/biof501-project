@@ -44,7 +44,6 @@ Here, we introduce a Nextflow pipeline **DGE-analysis** that takes in paired-end
     end
     subgraph upstream["Upstream"]
         direction TB
-            qc
             GENOME(["genome"])
             DOWNLOAD_REFERENCE["DOWNLOAD_REFERENCE"]
             GENOME_ANNOTATION(["genome annotation"])
@@ -58,7 +57,7 @@ Here, we introduce a Nextflow pipeline **DGE-analysis** that takes in paired-end
         direction LR
             MAP_ENSEMBL_ID["MAP_ENSEMBL_ID"]
             DESEQ2["DESEQ2"]
-            ENHANCED_VOLCANO["ENHANCED_VOLCANO"] --> volcano(["Volcano plot])
+            ENHANCED_VOLCANO["ENHANCED_VOLCANO"] --> volcano(["Volcano plot"])
     end
         FASTQC --> TRIMGALORE
         DOWNLOAD_REFERENCE --> GENOME & GENOME_ANNOTATION

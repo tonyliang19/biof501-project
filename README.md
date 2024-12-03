@@ -44,6 +44,7 @@ Here, we introduce a Nextflow pipeline **DGE-analysis** that takes in paired-end
     end
     subgraph upstream["Upstream"]
         direction TB
+            qc
             GENOME(["genome"])
             DOWNLOAD_REFERENCE["DOWNLOAD_REFERENCE"]
             GENOME_ANNOTATION(["genome annotation"])
@@ -90,6 +91,13 @@ Here, we introduce a Nextflow pipeline **DGE-analysis** that takes in paired-end
     style DESEQ2 fill:#FFD700,stroke:#000,stroke-width:2px
     style MAP_ENSEMBL_ID fill:#FFD700,stroke:#000,stroke-width:2px
     style ENHANCED_VOLCANO fill:#FFD700,stroke:#000,stroke-width:2px
+
+    %% Colors for inputs
+    style reads fill:#93D0FF
+    style GENOME fill:#93D0FF
+    style GENOME_ANNOTATION fill:#93D0FF
+    style count fill:#93D0FF
+    style volcano fill:#93D0FF
     %% This the link for line from fastqc to trimgalor
     linkStyle 0 stroke:#FF4500,stroke-width:2px
 

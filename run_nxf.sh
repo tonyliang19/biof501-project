@@ -40,6 +40,7 @@ do
 done
 
 # Then parse the run cmd
+#export NXF_OFFLINE='true'
 NEXTFLOW_CMD="nextflow run ${NXF_SRC_MAIN} --outdir ${OUTDIR} --samplesheet ${SAMPLESHEET} -profile ${PROFILE}"
 
 if [ "$RESUME" == "TRUE" ]; then

@@ -1,0 +1,29 @@
+Workflow:
+    dge-analysis: 
+    Nextflow: 24.04.4
+TRIMGALORE:
+  trimgalore: 0.6.7
+  cutadapt: 3.4
+FASTQC:
+  fastqc: 0.12.1
+HISAT2_BUILD:
+  hisat2-build: 2.2.0
+HISAT2_ALIGN:
+  hisat2: 2.2.0
+SAMTOOLS_TO_BAM:
+  samtools: 1.21
+SAMTOOLS_SORT:
+  samtools: 1.21
+FEATURE_COUNTS:
+  R: 4.0.3
+  Rsubread: 2.4.0
+DESEQ2:
+  R: 4.3.3
+  DESeq2: 1.42.0
+MAP_ENSEMBL_ID:
+  R: 4.3.2
+  org.Hs.eg.db: 3.18.0
+ENHANCED_VOLCANO:
+  R: 4.3.2
+  EnhancedVolcano: 1.20.0
+  ggplot2: 3.4.4

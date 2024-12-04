@@ -133,12 +133,24 @@ This structure is adapted from **nf-core** standard workflow from the [rnaseq](h
 ./
 ├── Makefile
 ├── README.md
-├── bin/
-│   └── featureCounts.R*
-├── conf/
+├── assets
+│   ├── default_profile_run_log.png
+│   └── test_profile_run_log.png
+├── bin
+│   ├── README.md
+│   ├── deseq2_analysis.R
+│   ├── featureCounts.R
+│   ├── map_ensembl_id.R
+│   └── plot_volcano.R
+├── conf
+│   ├── README.md
 │   ├── base.config
 │   └── test.config
-├── data/
+├── data
+│   ├── Homo_sapiens.GRCh38.113.gtf.gz
+│   ├── Homo_sapiens.GRCh38.dna.chromosome.1.fa.gz
+│   ├── Homo_sapiens.GRCh38.dna.chromosome.MT.fa.gz
+│   ├── README.md
 │   ├── SRR29891674_sample_1.fastq.gz
 │   ├── SRR29891674_sample_2.fastq.gz
 │   ├── SRR29891675_sample_1.fastq.gz
@@ -147,28 +159,28 @@ This structure is adapted from **nf-core** standard workflow from the [rnaseq](h
 │   ├── SRR29891677_sample_2.fastq.gz
 │   ├── SRR29891678_sample_1.fastq.gz
 │   ├── SRR29891678_sample_2.fastq.gz
+│   ├── metadata.csv
 │   └── samplesheet.csv
 ├── main.nf
-├── modules/
-│   ├── local/
-│   │   ├── download_reference/
-│   │   │   └── main.nf
-│   │   ├── fastqc/
-│   │   │   └── main.nf
-│   │   ├── feature_counts/
-│   │   │   └── main.nf
-│   │   ├── hisat2/
-│   │   │   ├── hisat2_align/
-│   │   │   └── hisat2_build/
-│   │   ├── samtools/
-│   │   │   ├── samtools_sort/
-│   │   │   └── samtools_to_bam/
-│   │   └── trimgalore/
-│   │       └── main.nf
-│   └── nf-core/
-│       └── main.nf
+├── modules
+│   ├── README.md
+│   ├── local
+│   └── nf-core
 ├── nextflow.config
-└── run_nxf.sh*
+├── results
+│   ├── README.md
+│   ├── deseq2
+│   ├── enhanced_volcano
+│   ├── fastqc
+│   ├── feature_counts
+│   ├── hisat2_align
+│   ├── hisat2_build
+│   ├── map_ensembl_id
+│   ├── pipeline_info
+│   ├── samtools_sort
+│   ├── samtools_to_bam
+│   └── trimgalore
+└── run_nxf.sh
 ```
 
 </details>
@@ -241,10 +253,11 @@ Then the pipeline could be run as the following using a test data contained alre
 
 ```bash
 # The outdir could also be replace to some other directory of your preference
+# Profile represents sets of configuration parameters, could be chained by prof1,prof2,...
 nextflow run main.nf \
     --samplesheet data/samplesheet.csv \
     --outdir results \
-    -profile docker,test
+    -profile docker
 ```
 
 Overall the running command should follow this structure:
@@ -253,7 +266,7 @@ Overall the running command should follow this structure:
 nextflow run main.nf \
     --samplesheet <SOME_SAMPLESHEET_CSV> \
     --outdir <OUTDIR> \
-    -profile docker,test
+    -profile docker
 ```
 
 where `<SOME_SAMPLESHEET_CSV>` is the csv data that follows format in [preparing-input section](#preparing-input) and `OUTDIR` being the directory you want the output files to store.
@@ -273,27 +286,170 @@ Alternatively, if you prefer a quick way to run the pipeline, there is a built-i
 bash run_nxf.sh # This would run the under default options above
 # If you want to resume run the pipeline, use the -r option like:
 bash run_nxf.sh -r
-# Or for a faster run of the pipeline to use smaller genome annotation file
+# Or for a faster run of the pipeline to use smaller reference genome file
 # Edit the PROFILE to PROFILE=docker,test and run with:
 bash run_nxf.sh
+# Equivatlently to
+nextflow run main.nf \
+    --samplesheet data/samplesheet.csv \
+    --outdir results \
+    -profile docker,test
 ```
 
 ## Pipeline Output
 
 There are two pre-defined configuration profiles, each of them varied by the genome fasta used. By default, the `Chr1` is used as the reference genome. If specified the `test` profile, the `ChrMT` is used as reference genome. 
 
-> [!NOTE]
+> [!IMPORTANT]
 > These results here **DO NOT represent** biological relevance, since the input fastq files are sampled following this [doc](data/README.md#sample-data)
 > 
 
+
+When the pipeline runs, it emits the following logs detailing which parameters were used or which profiles used:
+
+
 For the **default** option run:
+
+![](assets/default_profile_run_log.png)
+
 
 For the **test profile** option run:
 
+![](assets/test_profile_run_log.png)
+
+---
+
+> [!NOTE]
+> Here, we only present the expected outputs for the **default** profile and not the test.
+> 
+
+The end goal volcano plot should look like:
+
+![](results/enhanced_volcano/volcano_plot.png)
 
 
+The detailed software versions used and collected from the pipeline is stored under `results/pipeline_info/dge_analysis_versions.yml` and its contents should be:
 
+```bash
+Workflow:
+    dge-analysis:
+    Nextflow: 24.04.4
+TRIMGALORE:
+  trimgalore: 0.6.7
+  cutadapt: 3.4
+FASTQC:
+  fastqc: 0.12.1
+HISAT2_BUILD:
+  hisat2-build: 2.2.0
+HISAT2_ALIGN:
+  hisat2: 2.2.0
+SAMTOOLS_TO_BAM:
+  samtools: 1.21
+SAMTOOLS_SORT:
+  samtools: 1.21
+FEATURE_COUNTS:
+  R: 4.0.3
+  Rsubread: 2.4.0
+DESEQ2:
+  R: 4.3.3
+  DESeq2: 1.42.0
+MAP_ENSEMBL_ID:
+  R: 4.3.2
+  org.Hs.eg.db: 3.18.0
+ENHANCED_VOLCANO:
+  R: 4.3.2
+  EnhancedVolcano: 1.20.0
+  ggplot2: 3.4.4
+```
 
+The directory structure of the output directory at `results` should be:
+
+```bash
+results/
+├── README.md
+├── deseq2
+│   └── deseq2_result.csv
+├── enhanced_volcano
+│   └── volcano_plot.png
+├── fastqc
+│   ├── SRR29891674
+│   │   ├── SRR29891674_sample_1_fastqc.html
+│   │   ├── SRR29891674_sample_1_fastqc.zip
+│   │   ├── SRR29891674_sample_2_fastqc.html
+│   │   └── SRR29891674_sample_2_fastqc.zip
+│   ├── SRR29891675
+│   │   ├── SRR29891675_sample_1_fastqc.html
+│   │   ├── SRR29891675_sample_1_fastqc.zip
+│   │   ├── SRR29891675_sample_2_fastqc.html
+│   │   └── SRR29891675_sample_2_fastqc.zip
+│   ├── SRR29891677
+│   │   ├── SRR29891677_sample_1_fastqc.html
+│   │   ├── SRR29891677_sample_1_fastqc.zip
+│   │   ├── SRR29891677_sample_2_fastqc.html
+│   │   └── SRR29891677_sample_2_fastqc.zip
+│   └── SRR29891678
+│       ├── SRR29891678_sample_1_fastqc.html
+│       ├── SRR29891678_sample_1_fastqc.zip
+│       ├── SRR29891678_sample_2_fastqc.html
+│       └── SRR29891678_sample_2_fastqc.zip
+├── feature_counts
+│   ├── feature_counts.log
+│   └── feature_counts.rds
+├── hisat2_align
+│   ├── SRR29891674
+│   │   ├── SRR29891674.sam
+│   │   └── hisat2-SRR29891674.log
+│   ├── SRR29891675
+│   │   ├── SRR29891675.sam
+│   │   └── hisat2-SRR29891675.log
+│   ├── SRR29891677
+│   │   ├── SRR29891677.sam
+│   │   └── hisat2-SRR29891677.log
+│   └── SRR29891678
+│       ├── SRR29891678.sam
+│       └── hisat2-SRR29891678.log
+├── hisat2_build
+│   └── hisat2
+│       ├── Homo_sapiens.GRCh38.dna.chromosome.1.fa.1.ht2
+│       ├── Homo_sapiens.GRCh38.dna.chromosome.1.fa.2.ht2
+│       ├── Homo_sapiens.GRCh38.dna.chromosome.1.fa.3.ht2
+│       ├── Homo_sapiens.GRCh38.dna.chromosome.1.fa.4.ht2
+│       ├── Homo_sapiens.GRCh38.dna.chromosome.1.fa.5.ht2
+│       ├── Homo_sapiens.GRCh38.dna.chromosome.1.fa.6.ht2
+│       ├── Homo_sapiens.GRCh38.dna.chromosome.1.fa.7.ht2
+│       └── Homo_sapiens.GRCh38.dna.chromosome.1.fa.8.ht2
+├── map_ensembl_id
+│   └── mapped_id_deseq_result.csv
+├── pipeline_info
+│   ├── dge_analysis_versions.yml
+│   ├── execution_report_2024-12-03_17-26-38.html
+│   ├── execution_timeline_2024-12-03_17-26-38.html
+│   ├── execution_trace_2024-12-03_17-26-38.txt
+│   └── pipeline_dag_2024-12-03_17-26-38.html
+├── samtools_sort
+│   ├── SRR29891674_sorted.bam
+│   ├── SRR29891675_sorted.bam
+│   ├── SRR29891677_sorted.bam
+│   └── SRR29891678_sorted.bam
+├── samtools_to_bam
+│   ├── SRR29891674.bam
+│   ├── SRR29891675.bam
+│   ├── SRR29891677.bam
+│   └── SRR29891678.bam
+└── trimgalore
+    ├── SRR29891674
+    │   ├── SRR29891674_sample_1_val_1.fq.gz
+    │   └── SRR29891674_sample_2_val_2.fq.gz
+    ├── SRR29891675
+    │   ├── SRR29891675_sample_1_val_1.fq.gz
+    │   └── SRR29891675_sample_2_val_2.fq.gz
+    ├── SRR29891677
+    │   ├── SRR29891677_sample_1_val_1.fq.gz
+    │   └── SRR29891677_sample_2_val_2.fq.gz
+    └── SRR29891678
+        ├── SRR29891678_sample_1_val_1.fq.gz
+        └── SRR29891678_sample_2_val_2.fq.gz
+```
 
 ## Reference
 

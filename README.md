@@ -98,20 +98,24 @@ Here, we introduce a Nextflow pipeline **DGE-analysis** that takes in paired-end
     style GENOME_ANNOTATION fill:#93D0FF
     style count fill:#93D0FF
     style volcano fill:#93D0FF
-    %% This the link for line from fastqc to trimgalor
+    %% This the link for line from fastqc to trimgalore
     linkStyle 0 stroke:#FF4500,stroke-width:2px
 
-
 ```
+
+
 Above is the workflow steps overview of how from raw fastq files, we get to count matrix through list of bioinformatics tools (see [reference](#reference)) with these steps:
 
-1. Given a pair of fastq reads of sequencing files, check their qualities through **FASTQC** and remove low quality reads with **TRIMGALORE**
+1. Given a pair of fastq reads of sequencing files, check their qualities through **FastQC** and remove low quality reads with **Trim Galore**
 2. At the same time, reference genome and its annotation are downloaded from the internet, the `genome` is a parameter of the pipeline, which can be any other url pointing to a homo-sapiens genome.
-3. The genome index is built using **HISAT2** to allow for quicker location of query sequences in reference genome
-4. Then aligned trimmed reads from 1. and the built genome index from 3. using **HISAT2**. This step is separated from 3. to decouple the indexing and alignment logic.
-5. Then convert the aligned sequence alignment map (SAM) from 4. to binary alignment map (BAM) using **SAMTOOLS**, to have a compressed binary representation of 4.
-6. Then sort 5. BAM using SAMTOOLS, again for the sake of decoupling logic of conversion of file formats and sorting
-7. 
+3. The genome index is built using **HISAT2** to allow for quicker location of query sequences in reference genome.
+4. Then align trimmed reads of each sample from 1. and the built genome index from 3. using **HISAT2**. This step is separated from 3. to decouple the indexing and alignment logic.
+5. Then convert the aligned sequence alignment map (SAM) for each sample from 4. to binary alignment map (BAM) using **Samtools**, to have a compressed binary representation of 4. and allow for faster computational time.
+6. Then sort BAM from 5. using **Samtools**, again for the sake of decoupling logic of conversion of file formats and sorting the BAM file.
+7. Now, using all the BAM files and the downloaded annotation file of genome, we count mapped reads for genomic features using **featureCounts**, and obtain such count matrix where rows being genes in ensembl id format, and column being samples.
+8. Next, we could used the count matrix from 7. to estimate variance-mean dependence and test for differential expression using **DESeq2**, here we output log2 fold change (log2FC) of genes along with their pvalue, and ensembl id.
+9. Ensembl ids are mapped to gene symbols based on existing genome wide annotation of Homo-Sapiens at **org.Hs.eg.db** ,for better interpretability of later visualizations.
+10. Lastly, a volcano plot is produced via **EnhancedVolcano** to see which genes are differential expressed, i.e. differ significantly between conditions by looking at combination of the provided pvalue and log2FC.
 
 
 

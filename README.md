@@ -104,7 +104,7 @@ Here, we introduce a Nextflow pipeline **DGE-analysis** that takes in paired-end
 ```
 
 
-Above is the workflow steps overview of how from raw fastq files, we get to count matrix through list of bioinformatics tools (see [reference](#reference)) with these steps:
+Above is the workflow steps overview of how from raw fastq files, we get to count matrix through list of bioinformatics tools (see [tools reference](tools-citations.md)) with these steps:
 
 1. Given a pair of fastq reads of sequencing files, check their qualities through **FastQC** and remove low quality reads with **Trim Galore**
 2. At the same time, reference genome and its annotation are downloaded from the internet, the `genome` is a parameter of the pipeline, which can be any other url pointing to a homo-sapiens genome.
@@ -458,7 +458,5 @@ results/
 [2] Costa-Silva, Juliana, Douglas Domingues, and Fabricio Martins Lopes. "RNA-Seq differential expression analysis: An extended review and a software tool." PloS one 12.12 (2017): e0190152.
 
 [3] Li, Wentian. "Volcano plots in analyzing differential expressions with mRNA microarrays." Journal of bioinformatics and computational biology 10.06 (2012): 1231003.
-
-For a comprehensive list of reference to the softwares used in this project, please check this [file](tools-citations.md)
 
 

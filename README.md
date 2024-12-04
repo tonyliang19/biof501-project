@@ -8,7 +8,7 @@ Author: Tony Liang
 
 1. [Project Outline](#project-outline)
 1. [Workflow Overview](#workflow-overview)
-1. [Repository Structure](#directory-contents)
+1. [Repository Structure](#repository-structure)
 1. [Setup](#setup)
 1. [Preparing Input](#preparing-input)
 1. [Running Instructions](#running-instruction)
@@ -123,7 +123,7 @@ Above is the workflow steps overview of how from raw fastq files, we get to coun
 
 The following illustrates the tree structure of this repository, those that ends with `/` symbol are directories, otherwise it is treated as a regular file. 
 
-This structure is adapted from **nf-core** standard worfklow from the [rnaseq](https://github.com/nf-core/rnaseq/tree/master) repository.
+This structure is adapted from **nf-core** standard workflow from the [rnaseq](https://github.com/nf-core/rnaseq/tree/master) repository.
 
 
 <details>
@@ -203,7 +203,7 @@ git-2.34.1
 nextflow-24.04.4
 ```
 
-Other tools used in the pipeline are from public repository docker images retrieved mostly from the [biocontainers organization](https://quay.io/organization/biocontainers)
+Other tools used in the pipeline are from public repository docker images retrieved mostly from the [biocontainers organization](https://quay.io/organization/biocontainers).
 
 For a list of software images used in this pipeline see the configuration file [here](nextflow.config) under the `process` scope.
 
@@ -263,14 +263,37 @@ where `<SOME_SAMPLESHEET_CSV>` is the csv data that follows format in [preparing
 >
 > Also the profile there should be NO SPACE, i.e.:
 >
-> -profile docker,test works
+> -profile docker,test **works**
 >
-> -profile docker, test DO NOT WORK
+> -profile docker, test **DO NOT WORK**
 
+Alternatively, if you prefer a quick way to run the pipeline, there is a built-in script [`run_nxf.sh`](run_nxf.sh), where you could simply execute it:
+
+```bash
+bash run_nxf.sh # This would run the under default options above
+# If you want to resume run the pipeline, use the -r option like:
+bash run_nxf.sh -r
+# Or for a faster run of the pipeline to use smaller genome annotation file
+# Edit the PROFILE to PROFILE=docker,test and run with:
+bash run_nxf.sh
+```
 
 ## Pipeline Output
 
-**TODO**: this section should add some sample output
+There are two pre-defined configuration profiles, each of them varied by the genome fasta used. By default, the `Chr1` is used as the reference genome. If specified the `test` profile, the `ChrMT` is used as reference genome. 
+
+> [!NOTE]
+> These results here **DO NOT represent** biological relevance, since the input fastq files are sampled following this [doc](data/README.md#sample-data)
+> 
+
+For the **default** option run:
+
+For the **test profile** option run:
+
+
+
+
+
 
 ## Reference
 

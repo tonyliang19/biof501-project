@@ -202,6 +202,7 @@ This structure is adapted from **nf-core** standard workflow from the [rnaseq](h
 
 
 
+
 ## Setup
 
 There are some software dependencies in order to run this pipeline, corresponding softwares and versions are tested in the following:

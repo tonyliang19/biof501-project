@@ -127,7 +127,7 @@ This structure is adapted from **nf-core** standard workflow from the [rnaseq](h
 
 
 <details>
-  <summary>See the repository file structure (NEED TO UPDATE LATER) </summary>
+  <summary>See the repository file structure</summary>
 
 ```bash
 ./

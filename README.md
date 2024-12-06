@@ -19,9 +19,15 @@ Author: Tony Liang
 
 ### Introduction
 
-Technological advances have enabled easy access to high-throughput transcriptome sequencing (RNA-Seq). It provides far high coverage and greater resolution of dynamic nature of transcriptome compared to previous microarray-based methods like Sanger sequencing [1]. RNA-Seq allows us to compare specific conditions and understanding phenotypic variation through quantifying differentially expressed genes (DEGs) [2]. However, this process of from sequencing data to counts of DEGs could vary a lot depending input sequence data type, protocol or library strategy.  Due to these source of variations, there are many existing tools that identify DEGs from RNA-seq data, but not standardized as a modular, reproducible workflow. This modular feature allows simple replacement of tool to examine effects like alignment strategy, mapping reads, etc.
+Technological advances have enabled easy access to high-throughput transcriptome sequencing (RNA-Seq). It provides far higher coverage and greater resolution of the dynamic nature of transcriptome compared to previous microarray-based methods like Sanger sequencing [1]. RNA-Seq allows us to compare specific conditions and understand phenotypic variation through quantifying differentially expressed genes (DEGs) [2]. However, this process of sequencing data to counts of DEGs could vary a lot depending on input sequence data type, protocol, or library strategy.  Due to these sources of variations, many existing tools identify DEGs from RNA-seq data but are not standardized as a modular, reproducible workflow. This modular feature allows simple replacement of tools to examine effects like alignment strategy, mapping reads, etc.
 
-Here, we introduce a Nextflow pipeline **DGE-analysis** that takes in paired-end RNA-sequencing data in fastq format, transforming it all the way to gene counts matrix across different conditions from biological sample, and presenting nice volcano plot [3] of DEGs. 
+Here, we introduce a Nextflow pipeline **DGE-analysis** that takes in paired-end RNA-sequencing data in FATSQ format, transforming it to gene counts matrix across different conditions from biological sample, and presenting a nice volcano plot [3] of DEGs. 
+
+In short, this pipeline tries to solve these aims:
+
+1. Reproducible workflow, pinning the versions of software used, as results differ from one to other versions.
+2. Interoperability, running under various system configurations and resource allocations without modifying the logic.
+3. Modular, replacing any software of interest in the pipeline as long it solves the same task like alignment, plotting, or different analysis tool.
 
 
 ### Workflow Overview
@@ -98,30 +104,30 @@ Here, we introduce a Nextflow pipeline **DGE-analysis** that takes in paired-end
     style GENOME_ANNOTATION fill:#93D0FF
     style count fill:#93D0FF
     style volcano fill:#93D0FF
-    %% This the link for line from fastqc to trimgalore
+    %% This the link for line from FASTQc to trimgalore
     linkStyle 0 stroke:#FF4500,stroke-width:2px
 
 ```
 
 
-Above is the workflow steps overview of how from raw fastq files, we get to count matrix through list of bioinformatics tools (see [tools reference](tools-citations.md)) with these steps:
+Above is the workflow steps overview of how from raw FASTQ files, we get to count matrix through the list of bioinformatics tools (see [tools reference](tools-citations.md)) with these steps:
 
-1. Given a pair of fastq reads of sequencing files, check their qualities through **FastQC** and remove low quality reads with **Trim Galore**
-2. At the same time, reference genome and its annotation are downloaded from the internet, the `genome` is a parameter of the pipeline, which can be any other url pointing to a homo-sapiens genome.
-3. The genome index is built using **HISAT2** to allow for quicker location of query sequences in reference genome.
+1. Given a pair of FASTQ reads of sequencing files, check their qualities through **FastQC** and remove low-quality reads with **Trim Galore**
+2. At the same time, the reference genome and its annotation are downloaded from the internet, the `genome` is a parameter of the pipeline, which can be any other URL pointing to a homo-sapiens genome.
+3. The genome index is built using **HISAT2** to allow for quicker location of query sequences in the reference genome.
 4. Then align trimmed reads of each sample from 1. and the built genome index from 3. using **HISAT2**. This step is separated from 3. to decouple the indexing and alignment logic.
 5. Then convert the aligned sequence alignment map (SAM) for each sample from 4. to binary alignment map (BAM) using **Samtools**, to have a compressed binary representation of 4. and allow for faster computational time.
 6. Then sort BAM from 5. using **Samtools**, again for the sake of decoupling logic of conversion of file formats and sorting the BAM file.
-7. Now, using all the BAM files and the downloaded annotation file of genome, we count mapped reads for genomic features using **featureCounts**, and obtain such count matrix where rows being genes in ensembl id format, and column being samples.
-8. Next, we could used the count matrix from 7. to estimate variance-mean dependence and test for differential expression using **DESeq2**, here we output log2 fold change (log2FC) of genes along with their pvalue, and ensembl id.
-9. Ensembl ids are mapped to gene symbols based on existing genome wide annotation of Homo-Sapiens at **org.Hs.eg.db** ,for better interpretability of later visualizations.
-10. Lastly, a volcano plot is produced via **EnhancedVolcano** to see which genes are differential expressed, i.e. differ significantly between conditions by looking at combination of the provided pvalue and log2FC.
+7. Now, using all the BAM files and the downloaded annotation file of the genome, we count mapped reads for genomic features using **featureCounts**, and obtain such count matrix where rows are genes in ensembl id format, and columns are samples.
+8. Next, we could use the count matrix from 7. to estimate variance-mean dependence and test for differential expression using **DESeq2**, here we output log2 fold change (log2FC) of genes along with their pvalue, and ensembl id.
+9. Ensembl ids are mapped to gene symbols based on the existing genome-wide annotation of Homo-Sapiens at **org.Hs.eg.db** , for better interpretability of later visualizations.
+10. Lastly, a volcano plot is produced via **EnhancedVolcano** to see which genes are differentially expressed, i.e. differ significantly between conditions by looking at the combination of the provided Pvalue and log2FC.
 
 
 
 ## Repository Structure
 
-The following illustrates the tree structure of this repository, those that ends with `/` symbol are directories, otherwise it is treated as a regular file. 
+The following illustrates the tree structure of this repository, those that end with `/` symbol are directories, otherwise, it is treated as a regular file. 
 
 This structure is adapted from **nf-core** standard workflow from the [rnaseq](https://github.com/nf-core/rnaseq/tree/master) repository.
 
@@ -151,14 +157,14 @@ This structure is adapted from **nf-core** standard workflow from the [rnaseq](h
 │   ├── Homo_sapiens.GRCh38.dna.chromosome.1.fa.gz
 │   ├── Homo_sapiens.GRCh38.dna.chromosome.MT.fa.gz
 │   ├── README.md
-│   ├── SRR29891674_sample_1.fastq.gz
-│   ├── SRR29891674_sample_2.fastq.gz
-│   ├── SRR29891675_sample_1.fastq.gz
-│   ├── SRR29891675_sample_2.fastq.gz
-│   ├── SRR29891677_sample_1.fastq.gz
-│   ├── SRR29891677_sample_2.fastq.gz
-│   ├── SRR29891678_sample_1.fastq.gz
-│   ├── SRR29891678_sample_2.fastq.gz
+│   ├── SRR29891674_sample_1.FASTQ.gz
+│   ├── SRR29891674_sample_2.FASTQ.gz
+│   ├── SRR29891675_sample_1.FASTQ.gz
+│   ├── SRR29891675_sample_2.FASTQ.gz
+│   ├── SRR29891677_sample_1.FASTQ.gz
+│   ├── SRR29891677_sample_2.FASTQ.gz
+│   ├── SRR29891678_sample_1.FASTQ.gz
+│   ├── SRR29891678_sample_2.FASTQ.gz
 │   ├── metadata.csv
 │   └── samplesheet.csv
 ├── main.nf
@@ -166,12 +172,12 @@ This structure is adapted from **nf-core** standard workflow from the [rnaseq](h
 │   ├── README.md
 │   ├── local
 │   └── nf-core
-├── nextflow.config
+├── Nextflow.config
 ├── results
 │   ├── README.md
 │   ├── deseq2
 │   ├── enhanced_volcano
-│   ├── fastqc
+│   ├── FASTQc
 │   ├── feature_counts
 │   ├── hisat2_align
 │   ├── hisat2_build
@@ -187,38 +193,38 @@ This structure is adapted from **nf-core** standard workflow from the [rnaseq](h
 
 ### Directories
 
-- `bin`: This directory contains **executable** binary scripts used in the processes, provided if you have the relevant binary installed like `Rscript` or `python3`. For more information please see [here](bin/README.md).
+- `bin`: This directory contains **executable** binary scripts used in the processes, provided you have the relevant binary installed like `Rscript` or `python3`. For more information please see [here](bin/README.md).
 
-- `modules`: This directory contains nextflow processes definitions following these conventions:
-    - `local/<tool_name>/main.nf`: `<tool_name>` would be an actual binary tool that could be treated as smallest unit software to use in the workflow, and contains implementation of using these tools based on its documentation/manual.
-    - `nf-core/main.nf`: Code adapted from [nf-core/rnaseq](https://github.com/nf-core/rnaseq/blob/master/subworkflows/nf-core/utils_nextflow_pipeline/main.nf) under [MIT License](https://github.com/nf-core/rnaseq/blob/master/LICENSE), this stores standard code used across nf-core pipelines to record workflow/tools version numbers and some useful utilities.
+- `modules`: This directory contains Nextflow processes definitions following these conventions:
+    - `local/<tool_name>/main.nf`: `<tool_name>` would be an actual binary tool that could be treated as the smallest unit software to use in the workflow, and contains the implementation of using these tools based on its documentation/manual.
+    - `nf-core/main.nf`: Code adapted from [nf-core/rnaseq](https://github.com/nf-core/rnaseq/blob/master/subworkflows/nf-core/utils_Nextflow_pipeline/main.nf) under [MIT License](https://github.com/nf-core/rnaseq/blob/master/LICENSE), this stores standard code used across nf-core pipelines to record workflow/tools version numbers and some useful utilities.
     - For more information, see the [README here](./modules/README.md)
 
-- `data`: This directory contains a test samplesheet csv (input of the workflow) and other small test data to run the workflow. For more detail documentation on how these data were gathered, please the the [README here](./data/README.md)
+- `data`: This directory contains a test samplesheet CSV (input of the workflow) and other small test data to run the workflow. For more detailed documentation on how these data were gathered, please the the [README here](./data/README.md)
 
-- `conf`: This directory contains nextflow configuration parameters, it is design to store different profiles (i.e. running the pipeline under different infrastructure setting). This follows nf-core standard practice, where these configs are then just sourced in the main [top-level configuration](./nextflow.config) upon command-line usage. For more information, see [README here](./conf/README.md)
-    - [`base.config`](./conf/base.config): This is basic configuration that declares resource usages, and it is intended to be overridden by other profiles
-    - [`test.config`](./conf/test.config): This is configuration designed to be run on small dataset (i.e. our sample data this case), with limited resource settings
+- `conf`: This directory contains Nextflow configuration parameters, it is designed to store different profiles (i.e. running the pipeline under different infrastructure settings). This follows nf-core standard practice, where these configs are then just sourced in the main [top-level configuration](./Nextflow.config) upon command-line usage. For more information, see [README here](./conf/README.md)
+    - [`base.config`](./conf/base.config): This is a basic configuration that declares resource usages, and it is intended to be overridden by other profiles
+    - [`test.config`](./conf/test.config): This is a configuration designed to be run on a small dataset (i.e. our sample data this case), with limited resource settings
 
 
 
 
 ## Setup
 
-There are some software dependencies in order to run this pipeline, corresponding softwares and versions are tested in the following:
+There are some software dependencies to run this pipeline, corresponding software and versions are tested in the following:
 
 ```bash
 # <sofware>-<version_number>
 bash-5.1.16
-jave-11.0.22
+java-11.0.22
 Docker--20.10.23
 git-2.34.1
-nextflow-24.04.4
+Nextflow-24.04.4
 ```
 
 Other tools used in the pipeline are from public repository docker images retrieved mostly from the [biocontainers organization](https://quay.io/organization/biocontainers).
 
-For a list of software images used in this pipeline see the configuration file [here](nextflow.config) under the `process` scope.
+For a list of software images used in this pipeline see the configuration file [here](Nextflow.config) under the `process` scope.
 
 ### Preparing Input
 
@@ -227,21 +233,21 @@ First, prepare a samplesheet with your input data that looks as follows:
 **data/samplesheet.csv**:
 
 ```csv
-sample_name,condition,rep,fastq1,fastq2
-SRR29891678,control,rep1,data/SRR29891678_sample_1.fastq.gz,data/SRR29891678_sample_2.fastq.gz
-SRR29891677,control,rep2,data/SRR29891677_sample_1.fastq.gz,data/SRR29891677_sample_2.fastq.gz
-SRR29891675,treatment,rep1,data/SRR29891675_sample_1.fastq.gz,data/SRR29891675_sample_2.fastq.gz
-SRR29891674,treatment,rep2,data/SRR29891674_sample_1.fastq.gz,data/SRR29891674_sample_2.fastq.gz
+sample_name,condition,rep,FASTQ1,FASTQ2
+SRR29891678,control,rep1,data/SRR29891678_sample_1.FASTQ.gz,data/SRR29891678_sample_2.FASTQ.gz
+SRR29891677,control,rep2,data/SRR29891677_sample_1.FASTQ.gz,data/SRR29891677_sample_2.FASTQ.gz
+SRR29891675,treatment,rep1,data/SRR29891675_sample_1.FASTQ.gz,data/SRR29891675_sample_2.FASTQ.gz
+SRR29891674,treatment,rep2,data/SRR29891674_sample_1.FASTQ.gz,data/SRR29891674_sample_2.FASTQ.gz
 ```
 
-The `sample_name` here represents sequence read archive (SRA) accession code, in this case, `SRR*` are sequencing runs from NCBI's database. And, this samplesheet should also contain information like is the condition that sample represents (one of control or treatment), and its biological replicate number
-with prefix `rep`. Lastly, it should have two columns indicating path to the `fastq.gz` of both read1 and read2, as the pipeline required paired-end sequencing data.
+The `sample_name` here represents sequence read archive (SRA) accession code, in this case, `SRR*` are sequencing runs from NCBI's database. And, this samplesheet should also contain information like the condition that the sample represents (one of control or treatment) and its biological replicate number
+with the prefix `rep`. Lastly, it should have two columns indicating the path to the `FASTQ.gz` of both read1 and read2, as the pipeline required paired-end sequencing data.
 
-For more information of how this samplesheet was constructed, see its [README here](data/README.md).
+For more information on how this samplesheet was constructed, see its [README here](data/README.md).
 
 ### Running Instruction
 
-First, clone the this github repository and change the working directory to the clone repo using:
+First, clone this GitHub repository and change the working directory to the clone repo using:
 
 ```bash
 # Assuming you use one of bash/zsh or other unix systems
@@ -250,12 +256,12 @@ git clone https://github.com/tonyliang19/biof501-project.git
 cd biof501-project/
 ```
 
-Then the pipeline could be run as the following using a test data contained already in this repository:
+Then the pipeline could be run as the following using test data contained already in this repository:
 
 ```bash
 # The outdir could also be replace to some other directory of your preference
 # Profile represents sets of configuration parameters, could be chained by prof1,prof2,...
-nextflow run main.nf \
+Nextflow run main.nf \
     --samplesheet data/samplesheet.csv \
     --outdir results \
     -profile docker
@@ -264,16 +270,16 @@ nextflow run main.nf \
 Overall the running command should follow this structure:
 
 ```bash
-nextflow run main.nf \
+Nextflow run main.nf \
     --samplesheet <SOME_SAMPLESHEET_CSV> \
     --outdir <OUTDIR> \
     -profile docker
 ```
 
-where `<SOME_SAMPLESHEET_CSV>` is the csv data that follows format in [preparing-input section](#preparing-input) and `OUTDIR` being the directory you want the output files to store.
+where `<SOME_SAMPLESHEET_CSV>` is the CSV data that follows the format in [preparing-input section](#preparing-input) and `OUTDIR` is the directory you want the output files to store.
 
 > [!NOTE]
-> The pipeline should take some time run for the very first time, because of the containerized images it have to pull from internet, and downloads of some reference data
+> The pipeline should take some time to run for the very first time, because of the containerized images it has to pull from the internet, and downloads of some reference data.
 >
 > Also the profile there should be NO SPACE, i.e.:
 >
@@ -287,11 +293,11 @@ Alternatively, if you prefer a quick way to run the pipeline, there is a built-i
 bash run_nxf.sh # This would run the under default options above
 # If you want to resume run the pipeline, use the -r option like:
 bash run_nxf.sh -r
-# Or for a faster run of the pipeline to use smaller reference genome file
+# Or for a faster run of the pipeline use a smaller reference genome file by changing the profile config
 # Edit the PROFILE to PROFILE=docker,test and run with:
 bash run_nxf.sh
 # Equivatlently to
-nextflow run main.nf \
+Nextflow run main.nf \
     --samplesheet data/samplesheet.csv \
     --outdir results \
     -profile docker,test
@@ -299,10 +305,10 @@ nextflow run main.nf \
 
 ## Pipeline Output
 
-There are two pre-defined configuration profiles, each of them varied by the genome fasta used. By default, the `Chr1` is used as the reference genome. If specified the `test` profile, the `ChrMT` is used as reference genome. 
+There are two pre-defined configuration profiles, each of them varied by the genome fasta used. By default, the `Chr1` is used as the reference genome. If specified the `test` profile, the `ChrMT` is used as the reference genome. 
 
 > [!IMPORTANT]
-> These results here **DO NOT represent** biological relevance, since the input fastq files are sampled following this [doc](data/README.md#sample-data)
+> These results here **DO NOT represent** biological relevance, since the input FASTQ files are sampled following this [doc](data/README.md#sample-data)
 > 
 
 
@@ -324,12 +330,12 @@ For the **test profile** option run:
 > Here, we only present the expected outputs for the **default** profile and not the test.
 > 
 
-The end goal volcano plot should look like:
+The end goal volcano plot should look like this:
 
 ![](results/enhanced_volcano/volcano_plot.png)
 
 
-The detailed software versions used and collected from the pipeline is stored under `results/pipeline_info/dge_analysis_versions.yml` and its contents should be:
+The detailed software versions used and collected from the pipeline are stored under `results/pipeline_info/dge_analysis_versions.yml` and its contents should be:
 
 ```bash
 Workflow:
@@ -339,7 +345,7 @@ TRIMGALORE:
   trimgalore: 0.6.7
   cutadapt: 3.4
 FASTQC:
-  fastqc: 0.12.1
+  FASTQc: 0.12.1
 HISAT2_BUILD:
   hisat2-build: 2.2.0
 HISAT2_ALIGN:
@@ -372,27 +378,27 @@ results/
 │   └── deseq2_result.csv
 ├── enhanced_volcano
 │   └── volcano_plot.png
-├── fastqc
+├── FASTQc
 │   ├── SRR29891674
-│   │   ├── SRR29891674_sample_1_fastqc.html
-│   │   ├── SRR29891674_sample_1_fastqc.zip
-│   │   ├── SRR29891674_sample_2_fastqc.html
-│   │   └── SRR29891674_sample_2_fastqc.zip
+│   │   ├── SRR29891674_sample_1_FASTQc.html
+│   │   ├── SRR29891674_sample_1_FASTQc.zip
+│   │   ├── SRR29891674_sample_2_FASTQc.html
+│   │   └── SRR29891674_sample_2_FASTQc.zip
 │   ├── SRR29891675
-│   │   ├── SRR29891675_sample_1_fastqc.html
-│   │   ├── SRR29891675_sample_1_fastqc.zip
-│   │   ├── SRR29891675_sample_2_fastqc.html
-│   │   └── SRR29891675_sample_2_fastqc.zip
+│   │   ├── SRR29891675_sample_1_FASTQc.html
+│   │   ├── SRR29891675_sample_1_FASTQc.zip
+│   │   ├── SRR29891675_sample_2_FASTQc.html
+│   │   └── SRR29891675_sample_2_FASTQc.zip
 │   ├── SRR29891677
-│   │   ├── SRR29891677_sample_1_fastqc.html
-│   │   ├── SRR29891677_sample_1_fastqc.zip
-│   │   ├── SRR29891677_sample_2_fastqc.html
-│   │   └── SRR29891677_sample_2_fastqc.zip
+│   │   ├── SRR29891677_sample_1_FASTQc.html
+│   │   ├── SRR29891677_sample_1_FASTQc.zip
+│   │   ├── SRR29891677_sample_2_FASTQc.html
+│   │   └── SRR29891677_sample_2_FASTQc.zip
 │   └── SRR29891678
-│       ├── SRR29891678_sample_1_fastqc.html
-│       ├── SRR29891678_sample_1_fastqc.zip
-│       ├── SRR29891678_sample_2_fastqc.html
-│       └── SRR29891678_sample_2_fastqc.zip
+│       ├── SRR29891678_sample_1_FASTQc.html
+│       ├── SRR29891678_sample_1_FASTQc.zip
+│       ├── SRR29891678_sample_2_FASTQc.html
+│       └── SRR29891678_sample_2_FASTQc.zip
 ├── feature_counts
 │   ├── feature_counts.log
 │   └── feature_counts.rds
